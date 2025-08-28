@@ -1,41 +1,79 @@
-import React from 'react';
-import { ChevronRight, Instagram, Youtube, Music, ShoppingBag, ExternalLink } from 'lucide-react';
+'use client';
 
-interface LinkButtonProps {
+import React from 'react';
+
+export type LinkItem = {
   label: string;
   href: string;
-  icon: string;
-}
-
-const iconMap = {
-  instagram: Instagram,
-  youtube: Youtube,
-  tiktok: Music,
-  shop: ShoppingBag,
+  icon: 'instagram' | 'youtube' | 'tiktok' | 'x' | 'shop' | 'site';
 };
 
-const LinkButton: React.FC<LinkButtonProps> = ({ label, href, icon }) => {
-  const IconComponent = iconMap[icon as keyof typeof iconMap] || ShoppingBag;
-  const isExternal = href.startsWith('http');
-
+export default function LinkButton({ item }: { item: LinkItem }) {
   return (
     <a
-      href={href}
-      target={isExternal ? '_blank' : undefined}
-      rel={isExternal ? 'noopener noreferrer' : undefined}
-      className="group flex items-center justify-between w-full rounded-full border border-white/15 bg-white/5 px-4 py-3 hover:bg-white/8 hover:border-white/25 hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-white/30"
-      aria-label={`Visit ${label}${isExternal ? ' (opens in new tab)' : ''}`}
+      href={item.href}
+      className="group flex w-full items-center justify-between rounded-full border border-white/15 bg-white/5 px-4 py-3 backdrop-blur-xl hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-white/30"
     >
-      <div className="flex items-center gap-3">
-        <IconComponent className="w-5 h-5 text-white/70 group-hover:text-white/90 transition-colors" />
-        <span className="text-white font-medium group-hover:text-white/95 transition-colors">{label}</span>
-      </div>
-      <div className="flex items-center gap-1">
-        {isExternal && <ExternalLink className="w-3 h-3 text-white/40 group-hover:text-white/60 transition-colors" />}
-        <ChevronRight className="w-4 h-4 text-white/50 group-hover:text-white/70 transition-colors" />
-      </div>
+      <span className="flex items-center gap-2 text-sm">
+        <Icon name={item.icon} className="h-4 w-4 opacity-80" />
+        {item.label}
+      </span>
+      <svg className="h-4 w-4 translate-x-0 transition-transform group-hover:translate-x-0.5 opacity-70" viewBox="0 0 24 24" fill="none">
+        <path d="M8 5l7 7-7 7" stroke="currentColor" strokeWidth="2" />
+      </svg>
     </a>
   );
-};
+}
 
-export default LinkButton;
+function Icon({
+  name,
+  className = 'h-4 w-4',
+}: {
+  name: LinkItem['icon'];
+  className?: string;
+}) {
+  const common = { className, fill: 'none', stroke: 'currentColor', strokeWidth: 2 } as const;
+  switch (name) {
+    case 'instagram':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <rect x="3" y="3" width="18" height="18" rx="5" />
+          <circle cx="12" cy="12" r="3.5" />
+          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case 'youtube':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <path d="M22 12s0-4-1-5-5-1-9-1-8 0-9 1-1 5-1 5 0 4 1 5 5 1 9 1 8 0 9-1 1-5 1-5Z" />
+          <path d="M10 9l5 3-5 3V9Z" fill="currentColor" stroke="none" />
+        </svg>
+      );
+    case 'tiktok':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <path d="M9 7v8a3 3 0 1 0 3-3V4c1 2 3 4 6 4" />
+        </svg>
+      );
+    case 'x':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <path d="M4 4l16 16M20 4L4 20" />
+        </svg>
+      );
+    case 'shop':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <path d="M6 7h12l1 4H5l1-4Z" />
+          <path d="M6 11v7h12v-7" />
+        </svg>
+      );
+    case 'site':
+      return (
+        <svg viewBox="0 0 24 24" {...common}>
+          <circle cx="12" cy="12" r="9" />
+          <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" />
+        </svg>
+      );
+  }
+}

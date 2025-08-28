@@ -1,10 +1,10 @@
 import React from 'react';
 import GlassMasterCard from '@/components/GlassMasterCard';
 import LogoCabana from '@/components/LogoCabana';
-import LinkButton from '@/components/LinkButton';
+import LinkButton, { LinkItem } from '@/components/LinkButton';
 import VipModule from '@/components/VipModule';
 
-const links = [
+const links: LinkItem[] = [
   { label: "Instagram", href: "https://instagram.com/joincabana", icon: "instagram" },
   { label: "YouTube", href: "https://youtube.com/@cabana", icon: "youtube" },
   { label: "TikTok", href: "https://tiktok.com/@joincabana", icon: "tiktok" },
@@ -27,14 +27,12 @@ const Cabana = () => {
 
             {/* Links Stack */}
             <div className="space-y-3">
-              {links.map((link, index) => (
-                <LinkButton
-                  key={index}
-                  label={link.label}
-                  href={link.href}
-                  icon={link.icon}
-                />
-              ))}
+            {links.map((link, index) => (
+              <LinkButton
+                key={index}
+                item={link}
+              />
+            ))}
             </div>
 
             {/* VIP Module */}
