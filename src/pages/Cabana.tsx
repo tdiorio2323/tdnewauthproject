@@ -5,10 +5,10 @@ import LinkButton from '@/components/LinkButton';
 import VipModule from '@/components/VipModule';
 
 const links = [
-  { label: "Instagram", href: "#", icon: "instagram" },
-  { label: "YouTube", href: "#", icon: "youtube" },
-  { label: "TikTok", href: "#", icon: "tiktok" },
-  { label: "Shop", href: "#", icon: "shop" },
+  { label: "Instagram", href: "https://instagram.com/joincabana", icon: "instagram" },
+  { label: "YouTube", href: "https://youtube.com/@cabana", icon: "youtube" },
+  { label: "TikTok", href: "https://tiktok.com/@joincabana", icon: "tiktok" },
+  { label: "Shop", href: "https://shop.cabana.com", icon: "shop" },
 ];
 
 const Cabana = () => {
