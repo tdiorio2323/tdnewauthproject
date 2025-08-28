@@ -1,24 +1,15 @@
-'use client';
-
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PreviewModal from './PreviewModal';
 
-export default function VipModule() {
+export default function VipModule({ onUnlock }: { onUnlock?: (vipCode?: string) => void } = {}) {
+  const navigate = useNavigate();
   const [openPreview, setOpenPreview] = useState(false);
   const [vipCode, setVipCode] = useState('');
 
   async function handleUnlock() {
-    try {
-      const res = await fetch('/api/stripe/create-checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ vipCode: vipCode.trim() || undefined }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (data?.url) window.location.href = data.url;
-    } catch {
-      // no-op
-    }
+    if (onUnlock) return onUnlock(vipCode.trim() || undefined);
+    navigate('/success'); // stubbed success
   }
 
   return (

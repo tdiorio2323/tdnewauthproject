@@ -4,19 +4,16 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
-import CustomerApp from "./components/CustomerApp";
-import { AuthPage } from "./components/AuthPage";
-import { CheckoutFlow } from "./components/CheckoutFlow";
-import SuperAdminDashboard from "./components/SuperAdminDashboard";
-import BrandDashboard from "./components/BrandDashboard";
-import NotFound from "./pages/NotFound";
-import Auth from "./pages/Auth";
-import Shop from "./pages/Shop";
-import Checkout from "./pages/Checkout";
-import Admin from "./pages/Admin";
-import Brand from "./pages/Brand";
 import Cabana from "./pages/Cabana";
 import DynamicHandle from "./pages/DynamicHandle";
+import Checkout from "./pages/Checkout";
+import Success from "./pages/Success";
+import Cancel from "./pages/Cancel";
+import Admin from "./pages/Admin";
+import Brand from "./pages/Brand";
+import Auth from "./pages/Auth";
+import Shop from "./pages/Shop";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -28,15 +25,17 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/auth" element={<Auth />} />
-          <Route path="/shop" element={<Shop />} />
+          {/* static beats dynamic */}
+          <Route path="/cabana" element={<Cabana />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/success" element={<Success />} />
+          <Route path="/cancel" element={<Cancel />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/brand" element={<Brand />} />
-          <Route path="/cabana" element={<Cabana />} />
-          <Route path="/cabana-vip" element={<div><Cabana /></div>} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/shop" element={<Shop />} />
+          {/* dynamic last */}
           <Route path="/:handle" element={<DynamicHandle />} />
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
