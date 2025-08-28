@@ -10,7 +10,7 @@ export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
-      <Route path="/cabana" element={<Cabana />} />   {/* static before dynamic */}
+      <Route path="/cabana" element={<Cabana />} />
       <Route path="/success" element={<Success />} />
       <Route path="/cancel" element={<Cancel />} />
       <Route path="/:handle" element={<DynamicHandle />} />
