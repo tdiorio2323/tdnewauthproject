@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import { frostedButtonStyle } from '@/lib/frosted';
 
 export type LinkItem = {
   label: string;
@@ -12,7 +13,9 @@ export default function LinkButton({ item }: { item: LinkItem }) {
   return (
     <a
       href={item.href}
-      className="group flex w-full items-center justify-between rounded-full border border-white/15 bg-white/5 px-4 py-3 backdrop-blur-xl hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-white/30"
+      className="group flex w-full items-center justify-between rounded-full px-4 py-3 focus:outline-none focus:ring-2 focus:ring-white/30"
+      style={frostedButtonStyle()}
+      aria-label={item.label}
     >
       <span className="flex items-center gap-2 text-sm">
         <Icon name={item.icon} className="h-4 w-4 opacity-80" />

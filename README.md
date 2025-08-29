@@ -64,6 +64,17 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/dbcb82db-3a5c-4d43-86a6-c004351ecb04) and click on Share -> Publish.
 
+## Environment Variables
+
+This app requires client-safe Supabase keys via Vite. Copy the example and fill in your Supabase values (build will fail fast if not set):
+
+```
+cp .env.example .env.local
+# then edit .env.local
+VITE_SUPABASE_URL=https://<your-ref>.supabase.co
+VITE_SUPABASE_ANON_KEY=<your-anon-key>
+```
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!
@@ -71,3 +82,7 @@ Yes, you can!
 To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
 
 Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+
+## Roadmap
+
+See the project plan and acceptance criteria in [docs/LIB_OCR_PLAN.md](./docs/LIB_OCR_PLAN.md).

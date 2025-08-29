@@ -1,6 +1,8 @@
 export default {
   plugins: {
-    tailwindcss: {},
+    tailwindcss: {
+      config: './cabana-fresh/tailwind.config.js',
+    },
     autoprefixer: {},
   },
 }

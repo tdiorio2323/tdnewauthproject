@@ -13,14 +13,23 @@ export default function PreviewModal({ onClose }: { onClose: () => void }) {
             Close
           </button>
         </div>
-        <div className="grid grid-cols-3 gap-2">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="aspect-square overflow-hidden rounded-xl border border-white/10 bg-gradient-to-br from-white/10 to-white/[.06] blur-[1px]">
-              <div className="h-full w-full bg-[radial-gradient(40%_40%_at_50%_50%,rgba(255,255,255,.25),transparent)]" />
+        {/* Single hero preview tile */}
+        <div className="overflow-hidden rounded-xl border border-white/10">
+          <div className="aspect-[16/9] relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-white/[.06]" />
+            <div className="absolute inset-0 bg-[radial-gradient(40%_60%_at_50%_0%,rgba(255,255,255,.18),transparent)]" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="flex items-center gap-2 rounded-full border border-white/20 bg-black/40 px-3 py-1.5 text-xs backdrop-blur-md">
+                <svg viewBox="0 0 24 24" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden>
+                  <rect x="4" y="11" width="16" height="9" rx="2" />
+                  <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+                </svg>
+                VIP Content Preview
+              </div>
             </div>
-          ))}
+          </div>
         </div>
-        <p className="mt-3 text-center text-xs text-white/60">Subscribe to unlock full-quality posts.</p>
+        <p className="mt-3 text-center text-xs text-white/70">Subscribe to unlock full-quality posts.</p>
       </div>
     </div>
   );

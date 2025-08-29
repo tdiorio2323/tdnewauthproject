@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, SUPABASE_ENABLED } from '@/lib/supabase';
 import { toast } from 'sonner';
 
 interface Product {
@@ -53,13 +53,19 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
 
   const fetchProducts = async () => {
     try {
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_available', true);
+      if (SUPABASE_ENABLED) {
+        const { data, error } = await supabase
+          .from('products')
+          .select('*')
+          .eq('is_available', true);
 
-      if (error) throw error;
-      setProducts(data || []);
+        if (error) throw error;
+        setProducts(data || []);
+      } else {
+        // Fallback for front-end-only mode
+        console.log("Supabase disabled: Simulating product fetch.");
+        setProducts([]); // Return empty array or mock data
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to load products');

@@ -1,5 +1,4 @@
 import GlassMasterCard from "@/components/GlassMasterCard";
-import LogoCabana from "@/components/LogoCabana";
 import LinkButton, { LinkItem } from "@/components/LinkButton";
 import VipModule from "@/components/VipModule";
 
@@ -12,12 +11,29 @@ const LINKS: LinkItem[] = [
 
 export default function Cabana() {
   return (
-    <main className="min-h-dvh bg-[#0b0c0f] text-white antialiased">
-      <section className="mx-auto flex max-w-xl items-center justify-center px-4 py-14">
+    <main
+      className="relative min-h-screen min-h-dvh text-white antialiased bg-[#0b0c0f]"
+      style={{
+        backgroundImage: "url(/uploads/cabana%20background.jpeg)",
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+      }}
+    >
+      <div className="pointer-events-none absolute inset-0 bg-black/40" aria-hidden />
+      <section className="relative mx-auto flex max-w-md sm:max-w-lg md:max-w-xl items-center justify-center px-4 py-12 sm:py-16 md:py-20">
         <GlassMasterCard>
-          <div className="mb-5 flex items-center gap-2 text-xs text-white/70">
-            <LogoCabana className="h-4 w-4 opacity-90" />
-            <span className="tracking-wide">CABANA • @joincabana</span>
+          {/* Top-centered large logo */}
+          <div className="mb-4 flex justify-center">
+            <img
+              src="/uploads/cabana%20holo%20logo%20.png"
+              alt="CABANA logo"
+              className="object-contain"
+              style={{ width: 'clamp(72px, 18vw, 192px)', height: 'clamp(72px, 18vw, 192px)' }}
+            />
+          </div>
+          <div className="mb-5 flex justify-center">
+            <span className="text-sm md:text-base lg:text-lg font-bold tracking-wide">@JOINCABANA</span>
           </div>
           <div className="mb-4 space-y-3">
             {LINKS.map((l) => <LinkButton key={l.label} item={l} />)}

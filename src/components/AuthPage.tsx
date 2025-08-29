@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_ENABLED } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { AuthError } from "@supabase/supabase-js";
 
 interface AuthPageProps {
   onLogin?: (role: 'customer' | 'brand' | 'admin') => void;
@@ -35,43 +36,52 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
     setIsLoading(true);
     
     try {
-      let authResult;
-      
-      if (isSignUp) {
-        authResult = await supabase.auth.signUp({
-          email,
-          password,
-          options: {
-            emailRedirectTo: `${window.location.origin}/`,
-          }
-        });
-        
-        if (authResult.error) throw authResult.error;
-        
-        toast({
-          title: "Account Created",
-          description: "Please check your email to verify your account",
-        });
+      let authResult: any; // Use 'any' for flexibility with mock
+      let roleData: any = null;
+
+      if (SUPABASE_ENABLED) {
+        if (isSignUp) {
+          authResult = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+              emailRedirectTo: `${window.location.origin}/`,
+            }
+          });
+
+          if (authResult.error) throw authResult.error;
+
+          toast({
+            title: "Account Created",
+            description: "Please check your email to verify your account",
+          });
+        } else {
+          authResult = await supabase.auth.signInWithPassword({
+            email,
+            password,
+          });
+
+          if (authResult.error) throw authResult.error;
+        }
       } else {
-        authResult = await supabase.auth.signInWithPassword({
-          email,
-          password,
-        });
-        
-        if (authResult.error) throw authResult.error;
+        // Fallback for front-end-only mode
+        console.log("Supabase disabled: Simulating authentication.");
+        if (isSignUp) {
+          authResult = { data: { user: { id: "mock-user-id", email } }, error: null };
+          toast({
+            title: "Account Created (Mock)",
+            description: "Please check your email to verify your account (mock)",
+          });
+        } else {
+          // Simulate successful sign-in for any credentials
+          authResult = { data: { user: { id: "mock-user-id", email } }, error: null };
+        }
       }
 
       if (authResult.data.user && !isSignUp) {
-        // Get user role from user_roles table
-        const { data: roleData } = await supabase
-          .from('user_roles')
-          .select('role')
-          .eq('user_id', authResult.data.user.id)
-          .single();
-
         if (roleData) {
           const userRole = roleData.role;
-          
+
           // Navigate based on role
           if (userRole === 'admin') {
             navigate('/admin');
@@ -80,7 +90,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
           } else {
             navigate('/shop');
           }
-          
+
           // Call onLogin if provided (for backward compatibility)
           if (onLogin) {
             onLogin(userRole);
@@ -91,7 +101,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
         }
       }
 
-    } catch (error: any) {
+    } catch (error: AuthError | Error) {
       toast({
         title: "Error",
         description: error.message,
