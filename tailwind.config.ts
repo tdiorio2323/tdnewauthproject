@@ -34,6 +34,15 @@ export default {
 				],
 			},
 			colors: {
+				// CABANA Brand Colors
+				'brand-navy': '#1B2951',
+				'brand-purple': '#7B68EE', 
+				'brand-lavender': '#B19CD9',
+				'brand-gold': '#F5B942',
+				'brand-mint': '#C5E4B5',
+				'brand-teal': '#4A9FBD',
+				'brand-dark-navy': '#2B2D42',
+				
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
@@ -89,7 +98,12 @@ export default {
 				}
 			},
 			backgroundImage: {
-				'gradient-primary': 'var(--gradient-primary)',
+				// CABANA Brand Gradients
+				'gradient-holographic': 'linear-gradient(135deg, #7B68EE 0%, #4A9FBD 25%, #F5B942 50%, #C5E4B5 75%, #B19CD9 100%)',
+				'gradient-primary': 'linear-gradient(135deg, #7B68EE 0%, #4A9FBD 50%, #F5B942 100%)',
+				'gradient-secondary': 'linear-gradient(90deg, #B19CD9 0%, #7B68EE 50%, #4A9FBD 100%)',
+				'gradient-accent': 'linear-gradient(45deg, #F5B942 0%, #C5E4B5 100%)',
+				'gradient-neon': 'linear-gradient(90deg, #7B68EE 0%, #4A9FBD 50%, #7B68EE 100%)',
 				'gradient-hero': 'var(--gradient-hero)',
 				'gradient-card': 'var(--gradient-card)'
 			},
