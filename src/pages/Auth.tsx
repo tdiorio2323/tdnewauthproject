@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
 import { AuthPage } from "@/components/AuthPage";
 
 const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // If Supabase isn't configured, just render the auth UI without redirects
+    if (!SUPABASE_ENABLED) return;
     // Check if user is already logged in
       supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {

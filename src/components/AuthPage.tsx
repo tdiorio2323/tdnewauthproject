@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface AuthPageProps {
@@ -35,6 +35,11 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
     setIsLoading(true);
     
     try {
+      if (!SUPABASE_ENABLED) {
+        // Demo fallback: navigate to shop without real auth
+        navigate('/shop');
+        return;
+      }
       let authResult;
       
       if (isSignUp) {

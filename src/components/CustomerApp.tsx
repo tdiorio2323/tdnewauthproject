@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase } from '@/integrations/supabase/client';
+import { supabase, SUPABASE_ENABLED } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 
 interface Product {
@@ -53,6 +53,11 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
 
   const fetchProducts = async () => {
     try {
+      if (!SUPABASE_ENABLED) {
+        // No backend configured; show empty catalog gracefully
+        setProducts([]);
+        return;
+      }
       const { data, error } = await supabase
         .from('products')
         .select('*')
@@ -119,7 +124,7 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url('/lovable-uploads/00a3ca73-c7b5-4caf-be11-2b1107efb913.png')`
+      backgroundImage: `url('/cabana-pink-shimmer.jpg')`
     }}>
       <div className="min-h-screen bg-black/60 backdrop-blur-sm">
         {/* Header */}

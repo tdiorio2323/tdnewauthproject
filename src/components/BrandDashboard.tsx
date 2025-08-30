@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Progress } from "@/components/ui/progress";
-import { supabase } from "@/integrations/supabase/client";
+import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { 
   BarChart, 
@@ -53,7 +53,9 @@ const BrandDashboard = () => {
 
   const handleLogout = async () => {
     try {
-      await supabase.auth.signOut();
+      if (SUPABASE_ENABLED) {
+        await supabase.auth.signOut();
+      }
       navigate('/auth');
       toast.success('Logged out successfully');
     } catch (error) {

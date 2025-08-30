@@ -5,12 +5,14 @@ import DynamicHandle from "./pages/DynamicHandle";
 import Success from "./pages/Success";
 import Cancel from "./pages/Cancel";
 import NotFound from "./pages/NotFound";
+import Customize from "./pages/Customize";
 
 export default function App() {
   return (
     <Routes>
       <Route path="/" element={<Index />} />
       <Route path="/cabana" element={<Cabana />} />
+      <Route path="/customize" element={<Customize />} />
       <Route path="/success" element={<Success />} />
       <Route path="/cancel" element={<Cancel />} />
       <Route path="/:handle" element={<DynamicHandle />} />
