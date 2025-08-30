@@ -1,5 +1,10 @@
 # Repository Guidelines
 
+## Getting Started
+- Clone and install: `git clone <repo> && cd <repo> && npm i`.
+- Run locally: `npm run dev` then visit `http://localhost:5173`.
+- Node: use version >= 20 (see `"engines"` in `package.json`).
+
 ## Project Structure & Module Organization
 - `src/`: TypeScript + React app code (Tailwind).
   - `components/`: UI and layouts (PascalCase, e.g., `DashboardLayout.tsx`).
@@ -37,6 +42,12 @@
 - Commits: Use Conventional Commits (e.g., `feat:`, `fix:`, `refactor:`). Group related changes.
 - PRs: Provide a clear description, link issues, and list verification steps. Include screenshots/GIFs for UI changes.
 - Scope: Keep PRs small and focused; update docs and migrations when relevant.
+
+### PR Checklist
+- `npm run lint` passes with 0 errors/warnings.
+- `npm run build` or `npm run build:dev` succeeds.
+- Tests (when present) pass: `npm test`.
+- Include screenshots for UI changes; update `AGENTS.md` or docs if needed.
 
 ## Security & Configuration Tips
 - Secrets: Store in `.env.local` (e.g., `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY`). Access via `import.meta.env`.
