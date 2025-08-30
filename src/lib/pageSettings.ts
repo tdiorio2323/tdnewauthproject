@@ -12,6 +12,7 @@ export interface PageSettings {
   buttonStyle: ButtonStyle;
   layout: ButtonLayout;
   icon: string;
+  links?: { label: string; url: string; icon?: string }[];
 }
 
 function normalizeHandle(h: string) {
@@ -24,10 +25,15 @@ export async function savePageSettings(settings: PageSettings): Promise<{ ok: bo
 
   try {
     if (SUPABASE_ENABLED) {
-      // Table "pages" with columns: handle (text PK/unique), settings (jsonb), updated_at (timestamptz)
+      const auth = await (supabase as any).auth.getUser();
+      const userId = auth?.data?.user?.id ?? null;
+      // Table "pages": handle (text PK/unique), user_id (uuid), settings (jsonb)
       const { error } = await (supabase as any)
         .from("pages")
-        .upsert({ handle, settings: payload, updated_at: new Date().toISOString() }, { onConflict: "handle" });
+        .upsert(
+          { handle, user_id: userId, settings: payload, updated_at: new Date().toISOString() },
+          { onConflict: "handle" }
+        );
       if (error) throw error;
     } else {
       localStorage.setItem(`page:${handle}`, JSON.stringify(payload));
@@ -60,3 +66,23 @@ export async function loadPageSettings(handleRaw: string): Promise<PageSettings 
   }
 }
 
+// Lightweight font loader for Google Fonts
+const googleFontMap: Record<string, string> = {
+  Inter: "Inter:wght@400;500;600;700",
+  Poppins: "Poppins:wght@400;500;600;700",
+  "Space Mono": "Space+Mono",
+  Playfair: "Playfair+Display:wght@400;600;700",
+  "Playfair Display": "Playfair+Display:wght@400;600;700",
+};
+
+export function loadGoogleFont(fontName: string) {
+  const family = googleFontMap[fontName] || googleFontMap["Inter"];
+  const href = `https://fonts.googleapis.com/css2?family=${family}&display=swap`;
+  const id = `gf-${family.toLowerCase()}`;
+  if (document.getElementById(id)) return;
+  const link = document.createElement("link");
+  link.id = id;
+  link.rel = "stylesheet";
+  link.href = href;
+  document.head.appendChild(link);
+}

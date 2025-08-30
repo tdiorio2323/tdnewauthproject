@@ -14,8 +14,8 @@ export default function App() {
       <Route path="/" element={<Index />} />
       <Route path="/cabana" element={<Cabana />} />
       <Route path="/customize" element={<Customize />} />
-      <Route path="/seed" element={<Seed />} />
-      <Route path="/seed/:handle" element={<Seed />} />
+      {import.meta.env.DEV && <Route path="/seed" element={<Seed />} />}
+      {import.meta.env.DEV && <Route path="/seed/:handle" element={<Seed />} />}
       <Route path="/success" element={<Success />} />
       <Route path="/cancel" element={<Cancel />} />
       <Route path="/:handle" element={<DynamicHandle />} />

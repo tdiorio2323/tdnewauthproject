@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import Cabana from "./Cabana";
-import { loadPageSettings, PageSettings } from "@/lib/pageSettings";
+import { loadPageSettings, PageSettings, loadGoogleFont } from "@/lib/pageSettings";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
@@ -33,6 +33,10 @@ export default function DynamicHandle() {
 
 function RenderedPage({ settings }: { settings: PageSettings }) {
   const { theme, colors, buttonStyle, layout, icon, handle } = settings;
+  // load font
+  useEffect(() => {
+    loadGoogleFont(settings.font);
+  }, [settings.font]);
 
   const palette = useMemo(() => {
     const [h1, h2, h3, h4] = colors;
@@ -88,32 +92,34 @@ function RenderedPage({ settings }: { settings: PageSettings }) {
             <div className="mb-4 text-xs text-slate-400">@{handle}</div>
             {layout === "stacked" ? (
               <div className="space-y-2">
-                {["Instagram", "Shop", "Contact"].map((label) => (
-                  <Button
-                    key={label}
-                    className={cn(buttonClass)}
-                    style={{ backgroundColor: palette.primary, color: "white" }}
-                  >
-                    {label}
-                  </Button>
+                {(settings.links?.length ? settings.links : [{ label: "Link", url: "#" }]).map((l, i) => (
+                  <a key={`${l.label}-${i}`} href={l.url} target="_blank" rel="noreferrer">
+                    <Button
+                      className={cn(buttonClass)}
+                      style={{ backgroundColor: palette.primary, color: "white" }}
+                    >
+                      {l.label}
+                    </Button>
+                  </a>
                 ))}
               </div>
             ) : (
               <div className="grid grid-cols-3 gap-2">
-                {["📷", "🛍️", "✉️", "🎵", "🌐", "🎥", "🐦", "💼", "✖️"].map(
-                  (lbl, i) => (
-                    <button
-                      key={`${lbl}-${i}`}
-                      className={cn(
-                        buttonClass,
-                        "aspect-square rounded-lg bg-white text-xl"
-                      )}
-                      style={{ borderColor: palette.primary }}
-                    >
-                      {lbl}
-                    </button>
-                  )
-                )}
+                {(settings.links || []).slice(0, 9).map((l, i) => (
+                  <a
+                    key={`${l.label}-${i}`}
+                    href={l.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className={cn(
+                      buttonClass,
+                      "aspect-square rounded-lg bg-white text-xl flex items-center justify-center"
+                    )}
+                    style={{ borderColor: palette.primary }}
+                  >
+                    {l.icon || l.label[0]}
+                  </a>
+                ))}
               </div>
             )}
           </div>

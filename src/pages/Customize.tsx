@@ -8,6 +8,7 @@ import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 import { savePageSettings } from "@/lib/pageSettings";
+import { loadGoogleFont } from "@/lib/pageSettings";
 import { ArrowLeft } from "lucide-react";
 
 type Theme = "minimal" | "holographic" | "cyberpunk" | "glass";
@@ -24,6 +25,11 @@ export default function Customize() {
   const [buttonStyle, setButtonStyle] = useState<ButtonStyle>("rounded");
   const [layout, setLayout] = useState<ButtonLayout>("stacked");
   const [icon, setIcon] = useState<string>("✨");
+  const [links, setLinks] = useState<{ label: string; url: string; icon?: string }[]>([
+    { label: "Instagram", url: "https://instagram.com/", icon: "📷" },
+    { label: "Shop", url: "https://example.com/", icon: "🛍️" },
+    { label: "Contact", url: "mailto:hello@example.com", icon: "✉️" },
+  ]);
   const [handle, setHandle] = useState<string>("");
 
   const palette = useMemo(() => {
@@ -49,6 +55,12 @@ export default function Customize() {
         return "bg-white";
     }
   }, [theme]);
+
+  // Load selected font in preview
+  useMemo(() => {
+    loadGoogleFont(font);
+    return null;
+  }, [font]);
 
   const buttonClass = useMemo(() => {
     const base = "w-full text-sm font-medium";
@@ -79,6 +91,7 @@ export default function Customize() {
       buttonStyle,
       layout,
       icon,
+      links,
     });
     navigate(`/${handle.replace(/^@/, "")}`);
   }
@@ -238,6 +251,47 @@ export default function Customize() {
               </p>
             </Section>
 
+            {/* Links */}
+            <Section title="Links">
+              <div className="space-y-3">
+                {links.map((lnk, idx) => (
+                  <div key={idx} className="grid grid-cols-12 gap-2 items-center">
+                    <Input
+                      className="col-span-4"
+                      placeholder="Label"
+                      value={lnk.label}
+                      onChange={(e) =>
+                        setLinks((arr) => arr.map((l, i) => (i === idx ? { ...l, label: e.target.value } : l)))
+                      }
+                    />
+                    <Input
+                      className="col-span-7"
+                      placeholder="https://..."
+                      value={lnk.url}
+                      onChange={(e) =>
+                        setLinks((arr) => arr.map((l, i) => (i === idx ? { ...l, url: e.target.value } : l)))
+                      }
+                    />
+                    <Button
+                      variant="ghost"
+                      className="col-span-1"
+                      onClick={() => setLinks((arr) => arr.filter((_, i) => i !== idx))}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ))}
+                <div className="flex justify-end">
+                  <Button
+                    variant="outline"
+                    onClick={() => setLinks((arr) => [...arr, { label: "New Link", url: "" }])}
+                  >
+                    + Add Link
+                  </Button>
+                </div>
+              </div>
+            </Section>
+
             {/* Social handle */}
             <Section title="Social Handle (Optional)">
               <div className="space-y-2">
@@ -272,39 +326,41 @@ export default function Customize() {
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border bg-white text-xl">
                   {icon}
                 </div>
-                <div className="text-sm text-slate-500">{handle || "tyler-diorio"}</div>
-                <div className="mb-4 text-xs text-slate-400">
+                <div className="text-sm" style={{ fontFamily: font }}>{handle || "tyler-diorio"}</div>
+                <div className="mb-4 text-xs text-slate-500">
                   @{(handle || "tyler-diorio").replace(/^@/, "")}
                 </div>
 
                 {layout === "stacked" ? (
                   <div className="space-y-2">
-                    {["Instagram", "Shop", "Contact"].map((label) => (
-                      <Button
-                        key={label}
-                        className={cn(buttonClass)}
-                        style={{ backgroundColor: palette.primary, color: "white" }}
-                      >
-                        {label}
-                      </Button>
+                    {(links.length ? links : [{ label: "Link", url: "#" }]).map((l) => (
+                      <a key={l.label} href={l.url} target="_blank" rel="noreferrer">
+                        <Button
+                          className={cn(buttonClass, "w-full")}
+                          style={{ backgroundColor: palette.primary, color: "white" }}
+                        >
+                          {l.label}
+                        </Button>
+                      </a>
                     ))}
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 gap-2">
-                    {["📷", "🛍️", "✉️", "🎵", "🌐", "🎥", "🐦", "💼", "✖️"].map(
-                      (lbl, i) => (
-                        <button
-                          key={`${lbl}-${i}`}
-                          className={cn(
-                            buttonClass,
-                            "aspect-square rounded-lg bg-white text-xl"
-                          )}
-                          style={{ borderColor: palette.primary }}
-                        >
-                          {lbl}
-                        </button>
-                      )
-                    )}
+                    {(links.length ? links : []).slice(0, 9).map((l, i) => (
+                      <a
+                        key={`${l.label}-${i}`}
+                        href={l.url}
+                        target="_blank"
+                        rel="noreferrer"
+                        className={cn(
+                          buttonClass,
+                          "aspect-square rounded-lg bg-white text-xl flex items-center justify-center"
+                        )}
+                        style={{ borderColor: palette.primary }}
+                      >
+                        {l.icon || l.label[0]}
+                      </a>
+                    ))}
                   </div>
                 )}
 
