@@ -10,7 +10,6 @@ export const SUPABASE_ENABLED = Boolean(SUPABASE_URL && SUPABASE_PUBLISHABLE_KEY
 
 if (!SUPABASE_ENABLED) {
   // Surface a clear error early in development
-  // eslint-disable-next-line no-console
   console.error(
     '[Supabase] Missing VITE_SUPABASE_URL or VITE_SUPABASE_ANON_KEY. Add them to your .env.local file.'
   );
