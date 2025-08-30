@@ -158,7 +158,7 @@ export default function Customize() {
               <div className="space-y-4">
                 {[0, 1, 2, 3].map((i) => (
                   <div key={i} className="space-y-2">
-                    <Label className="text-xs text-slate-600">Tone {i + 1}</Label>
+                    <Label className="text-xs font-medium text-slate-900">Tone {i + 1}</Label>
                     <Slider
                       value={[colors[i]]}
                       onValueChange={(v) =>
@@ -329,8 +329,8 @@ export default function Customize() {
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-xl border bg-white p-5">
-      <h2 className="mb-3 text-sm font-medium text-slate-700">{title}</h2>
+    <div className="rounded-xl border bg-white/95 p-5 shadow-sm">
+      <h2 className="mb-3 text-sm font-semibold text-slate-900">{title}</h2>
       {children}
     </div>
   );
