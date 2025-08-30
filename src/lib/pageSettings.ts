@@ -51,23 +51,33 @@ export async function savePageSettings(settings: PageSettings): Promise<{ ok: bo
 
   try {
     if (SUPABASE_ENABLED) {
-      const auth = await (supabase as any).auth.getUser();
+      const auth = await supabase.auth.getUser();
       const userId = auth?.data?.user?.id ?? null;
       // Table "pages": handle (text PK/unique), user_id (uuid), settings (jsonb)
-      const { error } = await (supabase as any)
-        .from("pages")
-        .upsert(
-          { handle, user_id: userId, settings: payload, updated_at: new Date().toISOString() },
-          { onConflict: "handle" }
-        );
+      type PagesRow = { handle: string; user_id: string | null; settings: PageSettings; updated_at?: string };
+      type UpsertOptions = { onConflict?: string };
+      type UpsertResult = Promise<{ error: { message?: string } | null }>;
+      type SelectResult<T> = Promise<{ data: T | null; error: { message?: string } | null }>;
+      type PagesQuery = {
+        upsert: (value: Partial<PagesRow>, opts?: UpsertOptions) => UpsertResult;
+        select: (cols: string) => {
+          eq: (col: string, val: string) => { maybeSingle: () => SelectResult<{ settings: PageSettings }> };
+        };
+      };
+      const pages = (supabase as unknown as { from: (table: string) => PagesQuery }).from("pages");
+      const { error } = await pages.upsert(
+        { handle, user_id: userId, settings: payload, updated_at: new Date().toISOString() },
+        { onConflict: "handle" }
+      );
       if (error) throw error;
     } else {
       localStorage.setItem(`page:${handle}`, JSON.stringify(payload));
     }
     return { ok: true };
-  } catch (e: any) {
+  } catch (e: unknown) {
+    const message = e instanceof Error ? e.message : String(e);
     console.error("Failed to save page settings", e);
-    return { ok: false, error: String(e?.message || e) };
+    return { ok: false, error: message };
   }
 }
 
@@ -75,8 +85,13 @@ export async function loadPageSettings(handleRaw: string): Promise<PageSettings 
   const handle = normalizeHandle(handleRaw);
   try {
     if (SUPABASE_ENABLED) {
-      const { data, error } = await (supabase as any)
-        .from("pages")
+      type PagesQuery = {
+        select: (cols: string) => {
+          eq: (col: string, val: string) => { maybeSingle: () => Promise<{ data: { settings?: PageSettings } | null; error: { message?: string } | null }> };
+        };
+      };
+      const pages = (supabase as unknown as { from: (table: string) => PagesQuery }).from("pages");
+      const { data, error } = await pages
         .select("settings")
         .eq("handle", handle)
         .maybeSingle();

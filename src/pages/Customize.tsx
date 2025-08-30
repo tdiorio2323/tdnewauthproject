@@ -233,7 +233,7 @@ export default function Customize() {
               <RadioGroup
                 className="grid grid-cols-1 gap-2"
                 value={font}
-                onValueChange={(v) => setFont(v as any)}
+                onValueChange={(v: string) => setFont(v as (typeof fonts)[number])}
               >
                 {fonts.map((f) => (
                   <label
