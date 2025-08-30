@@ -6,6 +6,7 @@ import Success from "./pages/Success";
 import Cancel from "./pages/Cancel";
 import NotFound from "./pages/NotFound";
 import Customize from "./pages/Customize";
+import Seed from "./pages/Seed";
 
 export default function App() {
   return (
@@ -13,6 +14,7 @@ export default function App() {
       <Route path="/" element={<Index />} />
       <Route path="/cabana" element={<Cabana />} />
       <Route path="/customize" element={<Customize />} />
+      <Route path="/seed/:handle" element={<Seed />} />
       <Route path="/success" element={<Success />} />
       <Route path="/cancel" element={<Cancel />} />
       <Route path="/:handle" element={<DynamicHandle />} />
