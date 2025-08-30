@@ -80,6 +80,7 @@ function RenderedPage({ settings }: { settings: PageSettings }) {
     }
   }, [buttonStyle]);
 
+  const accent = settings.palette?.accent || `hsl(${colors[0] * 2}, 90%, 60%)`;
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
       <div className="mx-auto max-w-6xl px-4 py-10">
@@ -96,8 +97,24 @@ function RenderedPage({ settings }: { settings: PageSettings }) {
                   <a key={`${l.label}-${i}`} href={l.url} target="_blank" rel="noreferrer">
                     <Button
                       className={cn(buttonClass)}
-                      style={{ backgroundColor: palette.primary, color: "white" }}
+                      style={{
+                        background: buttonStyle === "gradient" ? `linear-gradient(135deg, ${accent}, ${palette.secondary})` : undefined,
+                        backgroundColor: buttonStyle === "outline" || buttonStyle === "minimal" ? "transparent" : accent,
+                        color: buttonStyle === "outline" || buttonStyle === "minimal" ? accent : "white",
+                        borderColor: buttonStyle === "outline" ? accent : undefined,
+                      }}
                     >
+                      {buttonStyle === "icon" && l.icon ? <span className="mr-1">{l.icon}</span> : null}
+                      {l.label}
+                    </Button>
+                  </a>
+                ))}
+              </div>
+            ) : layout === "row" ? (
+              <div className="flex gap-2 overflow-x-auto py-1">
+                {(settings.links || []).map((l, i) => (
+                  <a key={`${l.label}-${i}`} href={l.url} target="_blank" rel="noreferrer">
+                    <Button className={cn(buttonClass, "whitespace-nowrap")} style={{ backgroundColor: accent, color: "white" }}>
                       {l.label}
                     </Button>
                   </a>
@@ -115,7 +132,7 @@ function RenderedPage({ settings }: { settings: PageSettings }) {
                       buttonClass,
                       "aspect-square rounded-lg bg-white text-xl flex items-center justify-center"
                     )}
-                    style={{ borderColor: palette.primary }}
+                    style={{ borderColor: accent }}
                   >
                     {l.icon || l.label[0]}
                   </a>

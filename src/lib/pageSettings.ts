@@ -1,18 +1,44 @@
 import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
 
-export type Theme = "minimal" | "holographic" | "cyberpunk" | "glass";
-export type ButtonStyle = "rounded" | "sharp" | "pill" | "glow";
-export type ButtonLayout = "stacked" | "grid";
+export type Theme =
+  | "minimal"
+  | "holographic"
+  | "cyberpunk"
+  | "glass"
+  | "dark"
+  | "pastel"
+  | "vintage"
+  | "sci_fi"
+  | "nature"
+  | "luxury_gold"
+  | "grunge"
+  | "kawaii"
+  | "mystic"
+  | "noir";
+export type ButtonStyle =
+  | "rounded"
+  | "sharp"
+  | "pill"
+  | "glow"
+  | "outline"
+  | "gradient"
+  | "hover_animated"
+  | "shadowed"
+  | "minimal"
+  | "icon";
+export type ButtonLayout = "stacked" | "grid" | "row" | "carousel";
 
 export interface PageSettings {
   handle: string; // without leading @
   theme: Theme;
   font: string;
+  fontWeight?: number; // variable font axis (wght)
   colors: number[]; // [h1,h2,h3,h4]
   buttonStyle: ButtonStyle;
   layout: ButtonLayout;
   icon: string;
   links?: { label: string; url: string; icon?: string }[];
+  palette?: { preset?: string; accent?: string; autoAdjust?: boolean };
 }
 
 function normalizeHandle(h: string) {
@@ -73,6 +99,14 @@ const googleFontMap: Record<string, string> = {
   "Space Mono": "Space+Mono",
   Playfair: "Playfair+Display:wght@400;600;700",
   "Playfair Display": "Playfair+Display:wght@400;600;700",
+  Montserrat: "Montserrat:wght@300;400;500;600;700",
+  Roboto: "Roboto:wght@300;400;500;700",
+  Lato: "Lato:wght@300;400;700",
+  Oswald: "Oswald:wght@300;400;500;600;700",
+  Raleway: "Raleway:wght@300;400;500;700",
+  "Comic Sans Alternative": "Comic+Neue:wght@300;400;700",
+  Gothic: "UnifrakturCook:wght@700",
+  "Brush Script": "Dancing+Script:wght@400;600;700",
 };
 
 export function loadGoogleFont(fontName: string) {

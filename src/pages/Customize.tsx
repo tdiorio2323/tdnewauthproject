@@ -6,25 +6,67 @@ import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Slider } from "@/components/ui/slider";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { savePageSettings } from "@/lib/pageSettings";
 import { loadGoogleFont } from "@/lib/pageSettings";
 import { ArrowLeft } from "lucide-react";
 
-type Theme = "minimal" | "holographic" | "cyberpunk" | "glass";
-type ButtonStyle = "rounded" | "sharp" | "pill" | "glow";
-type ButtonLayout = "stacked" | "grid";
+type Theme =
+  | "minimal"
+  | "holographic"
+  | "cyberpunk"
+  | "glass"
+  | "dark"
+  | "pastel"
+  | "vintage"
+  | "sci_fi"
+  | "nature"
+  | "luxury_gold"
+  | "grunge"
+  | "kawaii"
+  | "mystic"
+  | "noir";
+type ButtonStyle =
+  | "rounded"
+  | "sharp"
+  | "pill"
+  | "glow"
+  | "outline"
+  | "gradient"
+  | "hover_animated"
+  | "shadowed"
+  | "minimal"
+  | "icon";
+type ButtonLayout = "stacked" | "grid" | "row";
 
-const fonts = ["Inter", "Playfair", "Space Mono", "Poppins"] as const;
+const fonts = [
+  "Inter",
+  "Playfair",
+  "Space Mono",
+  "Poppins",
+  "Montserrat",
+  "Roboto",
+  "Lato",
+  "Oswald",
+  "Raleway",
+  "Brush Script",
+  "Gothic",
+  "Comic Sans Alternative",
+] as const;
 
 export default function Customize() {
   const navigate = useNavigate();
   const [theme, setTheme] = useState<Theme>("minimal");
   const [font, setFont] = useState<(typeof fonts)[number]>("Inter");
+  const [fontWeight, setFontWeight] = useState<number>(500);
   const [colors, setColors] = useState<number[]>([58, 46, 32, 10]);
   const [buttonStyle, setButtonStyle] = useState<ButtonStyle>("rounded");
   const [layout, setLayout] = useState<ButtonLayout>("stacked");
   const [icon, setIcon] = useState<string>("✨");
+  const [palettePreset, setPalettePreset] = useState<string>("tropical");
+  const [accent, setAccent] = useState<string>("#7c3aed");
+  const [autoAdjust, setAutoAdjust] = useState<boolean>(true);
   const [links, setLinks] = useState<{ label: string; url: string; icon?: string }[]>([
     { label: "Instagram", url: "https://instagram.com/", icon: "📷" },
     { label: "Shop", url: "https://example.com/", icon: "🛍️" },
@@ -51,6 +93,26 @@ export default function Customize() {
         return "bg-[#0b0b12] text-white";
       case "glass":
         return "bg-slate-50/60 backdrop-blur-sm";
+      case "dark":
+        return "bg-slate-900 text-white";
+      case "pastel":
+        return "bg-gradient-to-b from-pink-50 to-blue-50";
+      case "vintage":
+        return "bg-[#f8f1e7]";
+      case "sci_fi":
+        return "bg-gradient-to-b from-slate-900 to-indigo-900 text-white";
+      case "nature":
+        return "bg-gradient-to-b from-emerald-50 to-teal-50";
+      case "luxury_gold":
+        return "bg-gradient-to-b from-amber-50 to-yellow-50";
+      case "grunge":
+        return "bg-neutral-900 text-neutral-100";
+      case "kawaii":
+        return "bg-gradient-to-b from-pink-50 to-purple-50";
+      case "mystic":
+        return "bg-gradient-to-b from-indigo-50 to-purple-50";
+      case "noir":
+        return "bg-black text-white";
       default:
         return "bg-white";
     }
@@ -76,6 +138,18 @@ export default function Customize() {
           rounded,
           "shadow-[0_0_0] hover:shadow-[0_0_20px] transition-shadow"
         );
+      case "outline":
+        return cn(base, rounded, "border-2 bg-transparent");
+      case "gradient":
+        return cn(base, rounded, "text-white");
+      case "hover_animated":
+        return cn(base, rounded, "transition-transform hover:scale-[1.02]");
+      case "shadowed":
+        return cn(base, rounded, "shadow-md hover:shadow-lg");
+      case "minimal":
+        return cn(base, "rounded-none border-b");
+      case "icon":
+        return cn(base, rounded, "flex items-center gap-2");
       default:
         return cn(base, rounded);
     }
@@ -87,11 +161,13 @@ export default function Customize() {
       handle: handle.replace(/^@/, ""),
       theme,
       font,
+      fontWeight,
       colors,
       buttonStyle,
       layout,
       icon,
       links,
+      palette: { preset: palettePreset, accent, autoAdjust },
     });
     navigate(`/${handle.replace(/^@/, "")}`);
   }
@@ -129,7 +205,17 @@ export default function Customize() {
                     },
                     { id: "cyberpunk", label: "Cyberpunk", hint: "Neon Glow" },
                     { id: "glass", label: "Glassmorphism", hint: "Frosted Glass" },
-                  ] as { id: Theme; label: string; hint: string }[]
+                    { id: "dark", label: "Dark Mode" },
+                    { id: "pastel", label: "Pastel Dreams" },
+                    { id: "vintage", label: "Vintage Retro" },
+                    { id: "sci_fi", label: "Futuristic Sci‑Fi" },
+                    { id: "nature", label: "Nature Inspired" },
+                    { id: "luxury_gold", label: "Luxury Gold" },
+                    { id: "grunge", label: "Grunge Punk" },
+                    { id: "kawaii", label: "Kawaii Cute" },
+                    { id: "mystic", label: "Mystic Fantasy" },
+                    { id: "noir", label: "Seductive Noir" },
+                  ] as { id: Theme; label: string; hint?: string }[]
                 ).map((t) => (
                   <Choice
                     key={t.id}
@@ -164,11 +250,47 @@ export default function Customize() {
                   </label>
                 ))}
               </RadioGroup>
+              <div className="mt-3">
+                <Label className="text-xs text-slate-600">Font Weight</Label>
+                <Slider value={[fontWeight]} min={300} max={800} step={50} onValueChange={(v) => setFontWeight(v[0] || 500)} />
+              </div>
             </Section>
 
             {/* Color Scheme */}
             <Section title="Color Scheme">
               <div className="space-y-4">
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "mono", label: "Monochrome", accent: "#111827" },
+                    { id: "tropical", label: "Vibrant Tropical", accent: "#10b981" },
+                    { id: "sunset", label: "Sunset", accent: "#f97316" },
+                    { id: "violet", label: "Violet", accent: "#7c3aed" },
+                  ].map((p) => (
+                    <button
+                      key={p.id}
+                      className={cn(
+                        "rounded-full border px-3 py-1 text-xs",
+                        palettePreset === p.id && "border-primary bg-primary/10"
+                      )}
+                      onClick={() => {
+                        setPalettePreset(p.id);
+                        setAccent(p.accent);
+                      }}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+                <div className="grid grid-cols-2 gap-4 items-center">
+                  <div>
+                    <Label className="text-xs font-medium text-slate-900">Accent Color</Label>
+                    <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-10 w-full rounded border" />
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <Switch checked={autoAdjust} onCheckedChange={setAutoAdjust} />
+                    <Label className="text-xs text-slate-700">Auto-adjust theme</Label>
+                  </div>
+                </div>
                 {[0, 1, 2, 3].map((i) => (
                   <div key={i} className="space-y-2">
                     <Label className="text-xs font-medium text-slate-900">Tone {i + 1}</Label>
@@ -198,6 +320,12 @@ export default function Customize() {
                       { id: "sharp", label: "Sharp" },
                       { id: "pill", label: "Pill" },
                       { id: "glow", label: "Glow" },
+                      { id: "outline", label: "Outlined" },
+                      { id: "gradient", label: "Gradient Fill" },
+                      { id: "hover_animated", label: "Animated Hover" },
+                      { id: "shadowed", label: "Shadowed" },
+                      { id: "icon", label: "Icon‑Integrated" },
+                      { id: "minimal", label: "Minimal Line" },
                     ] as { id: ButtonStyle; label: string }[]
                   ).map((opt) => (
                     <Choice
@@ -217,6 +345,7 @@ export default function Customize() {
                     [
                       { id: "stacked", label: "Stacked Buttons" },
                       { id: "grid", label: "3x3 Icon Grid" },
+                      { id: "row", label: "Horizontal Row" },
                     ] as { id: ButtonLayout; label: string }[]
                   ).map((opt) => (
                     <Choice
@@ -326,7 +455,7 @@ export default function Customize() {
                 <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border bg-white text-xl">
                   {icon}
                 </div>
-                <div className="text-sm" style={{ fontFamily: font }}>{handle || "tyler-diorio"}</div>
+                <div className="text-sm" style={{ fontFamily: font, fontWeight }}>{handle || "tyler-diorio"}</div>
                 <div className="mb-4 text-xs text-slate-500">
                   @{(handle || "tyler-diorio").replace(/^@/, "")}
                 </div>
@@ -337,7 +466,33 @@ export default function Customize() {
                       <a key={l.label} href={l.url} target="_blank" rel="noreferrer">
                         <Button
                           className={cn(buttonClass, "w-full")}
-                          style={{ backgroundColor: palette.primary, color: "white" }}
+                          style={{
+                            background:
+                              buttonStyle === "gradient"
+                                ? `linear-gradient(135deg, ${accent}, ${palette.secondary})`
+                                : undefined,
+                            backgroundColor:
+                              buttonStyle === "outline" || buttonStyle === "minimal"
+                                ? "transparent"
+                                : accent,
+                            color:
+                              buttonStyle === "outline" || buttonStyle === "minimal" ? accent : "white",
+                            borderColor: buttonStyle === "outline" ? accent : undefined,
+                          }}
+                        >
+                          {buttonStyle === "icon" && l.icon ? <span className="mr-1">{l.icon}</span> : null}
+                          {l.label}
+                        </Button>
+                      </a>
+                    ))}
+                  </div>
+                ) : layout === "row" ? (
+                  <div className="flex gap-2 overflow-x-auto py-1">
+                    {(links.length ? links : []).map((l, i) => (
+                      <a key={`${l.label}-${i}`} href={l.url} target="_blank" rel="noreferrer">
+                        <Button
+                          className={cn(buttonClass, "whitespace-nowrap")}
+                          style={{ backgroundColor: accent, color: "white" }}
                         >
                           {l.label}
                         </Button>
@@ -356,7 +511,7 @@ export default function Customize() {
                           buttonClass,
                           "aspect-square rounded-lg bg-white text-xl flex items-center justify-center"
                         )}
-                        style={{ borderColor: palette.primary }}
+                        style={{ borderColor: accent }}
                       >
                         {l.icon || l.label[0]}
                       </a>
