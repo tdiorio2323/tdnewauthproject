@@ -14,6 +14,7 @@ export default function App() {
       <Route path="/" element={<Index />} />
       <Route path="/cabana" element={<Cabana />} />
       <Route path="/customize" element={<Customize />} />
+      <Route path="/seed" element={<Seed />} />
       <Route path="/seed/:handle" element={<Seed />} />
       <Route path="/success" element={<Success />} />
       <Route path="/cancel" element={<Cancel />} />
