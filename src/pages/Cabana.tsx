@@ -3,6 +3,7 @@ import LogoCabana from "@/components/LogoCabana";
 import LinkButton, { LinkItem } from "@/components/LinkButton";
 import VipModule from "@/components/VipModule";
 import cabanaLogo from "@/assets/cabana-logo.png";
+import luxuryBg from "@/assets/luxury-background.png";
 
 const LINKS: LinkItem[] = [
   { label: "Instagram", href: "https://instagram.com/joincabana", icon: "instagram" },
@@ -13,11 +14,20 @@ const LINKS: LinkItem[] = [
 
 export default function Cabana() {
   return (
-    <main className="min-h-dvh bg-[#0b0c0f] text-white antialiased">
-      {/* Luxe holographic background */}
-      <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(180,140,255,0.15),transparent_60%),radial-gradient(60%_40%_at_80%_100%,rgba(245,207,122,0.15),transparent_60%),radial-gradient(40%_30%_at_20%_80%,rgba(135,230,255,0.12),transparent_50%)]" />
+    <main className="min-h-dvh text-white antialiased relative overflow-hidden">
+      {/* Luxury background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${luxuryBg})` }}
+      />
       
-      <section className="mx-auto flex max-w-xl items-center justify-center px-4 py-14">
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/60" />
+      
+      {/* Luxe holographic overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(180,140,255,0.15),transparent_60%),radial-gradient(60%_40%_at_80%_100%,rgba(245,207,122,0.15),transparent_60%),radial-gradient(40%_30%_at_20%_80%,rgba(135,230,255,0.12),transparent_50%)]" />
+      
+      <section className="relative z-10 mx-auto flex max-w-xl items-center justify-center px-4 py-14">
         <GlassMasterCard>
           {/* Background pattern inside card */}
           <div className="absolute inset-0 rounded-2xl opacity-30">
