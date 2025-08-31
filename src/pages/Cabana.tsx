@@ -2,7 +2,7 @@ import GlassMasterCard from "@/components/GlassMasterCard";
 import LogoCabana from "@/components/LogoCabana";
 import LinkButton, { LinkItem } from "@/components/LinkButton";
 import VipModule from "@/components/VipModule";
-import cabanaLogo from "@/assets/cabana-logo.png";
+import cabanaLogo from "@/assets/cabana-logo-new.png";
 import luxuryBg from "@/assets/luxury-background.png";
 
 const LINKS: LinkItem[] = [

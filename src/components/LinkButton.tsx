@@ -12,13 +12,17 @@ export default function LinkButton({ item }: { item: LinkItem }) {
   return (
     <a
       href={item.href}
-      className="group flex w-full items-center justify-between rounded-full border border-white/15 bg-white/5 px-4 py-3 backdrop-blur-xl hover:bg-white/8 focus:outline-none focus:ring-2 focus:ring-white/30"
+      className="group relative flex w-full items-center justify-between rounded-full border border-white/20 bg-white/10 px-4 py-3 backdrop-blur-xl transition-all duration-300 hover:bg-white/15 hover:border-white/30 hover:shadow-lg hover:shadow-white/10 focus:outline-none focus:ring-2 focus:ring-white/40"
     >
-      <span className="flex items-center gap-2 text-sm">
+      {/* Inner glass highlight */}
+      <div className="absolute inset-0 rounded-full bg-gradient-to-b from-white/10 to-transparent opacity-50" />
+      
+      {/* Content */}
+      <span className="relative flex items-center gap-2 text-sm font-medium">
         <Icon name={item.icon} className="h-4 w-4 opacity-80" />
         {item.label}
       </span>
-      <svg className="h-4 w-4 translate-x-0 transition-transform group-hover:translate-x-0.5 opacity-70" viewBox="0 0 24 24" fill="none">
+      <svg className="relative h-4 w-4 translate-x-0 transition-transform group-hover:translate-x-0.5 opacity-70" viewBox="0 0 24 24" fill="none">
         <path d="M8 5l7 7-7 7" stroke="currentColor" strokeWidth="2" />
       </svg>
     </a>
