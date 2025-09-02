@@ -174,13 +174,10 @@ export default function Customize() {
   }
 
   return (
-    <main className="min-h-dvh text-white antialiased relative overflow-hidden">
-      {/* Luxury background image */}
-      <div 
-        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-        style={{ backgroundImage: `url(${luxuryBg})` }}
-      />
-      
+    <main 
+      className="min-h-dvh text-white antialiased relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      style={{ backgroundImage: `url(${luxuryBg})` }}
+    >
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/60" />
       
