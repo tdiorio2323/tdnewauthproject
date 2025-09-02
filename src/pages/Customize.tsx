@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { savePageSettings } from "@/lib/pageSettings";
 import { loadGoogleFont } from "@/lib/pageSettings";
 import { ArrowLeft } from "lucide-react";
+import luxuryBg from "@/assets/luxury-background.png";
 
 type Theme =
   | "minimal"
@@ -173,19 +174,31 @@ export default function Customize() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-white to-slate-50">
-      <div className="mx-auto max-w-6xl px-4 py-10">
+    <main className="min-h-dvh text-white antialiased relative overflow-hidden">
+      {/* Luxury background image */}
+      <div 
+        className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+        style={{ backgroundImage: `url(${luxuryBg})` }}
+      />
+      
+      {/* Dark overlay for better text readability */}
+      <div className="absolute inset-0 bg-black/60" />
+      
+      {/* Luxe holographic overlay */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(180,140,255,0.15),transparent_60%),radial-gradient(60%_40%_at_80%_100%,rgba(245,207,122,0.15),transparent_60%),radial-gradient(40%_30%_at_20%_80%,rgba(135,230,255,0.12),transparent_50%)]" />
+      
+      <div className="relative z-10 mx-auto max-w-6xl px-4 py-10">
         <div className="mb-2">
           <Button variant="ghost" onClick={() => navigate("/")}
-            className="-ml-2 text-slate-600 hover:text-slate-900">
+            className="-ml-2 text-white/70 hover:text-white">
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
         </div>
-        <h1 className="text-center text-2xl tracking-[0.35em] text-slate-800">
+        <h1 className="text-center text-2xl tracking-[0.35em] text-white">
           CUSTOMIZE
         </h1>
-        <p className="mt-1 text-center text-xs text-slate-500">
+        <p className="mt-1 text-center text-xs text-white/70">
           Design your experience • Live preview
         </p>
 
@@ -534,7 +547,7 @@ export default function Customize() {
           </div>
         </div>
       </div>
-    </div>
+    </main>
   );
 }
 
