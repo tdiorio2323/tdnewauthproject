@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme, THEMES, FONTS, COLOR_SCHEMES, ThemeType, FontType, ButtonStyleType, ColorSchemeType, ButtonLayoutType } from '../contexts/ThemeContext';
+// Using simple checkboxes for add-ons to avoid extra deps
 
 const THEME_OPTIONS = [
   { id: 'minimal', name: 'Minimal', preview: 'Clean & Simple', emoji: '🤍' },
@@ -276,6 +277,69 @@ export default function CustomizePage() {
                       </button>
                     ))}
                   </div>
+                </div>
+              </div>
+
+              {/* Add-Ons */}
+              <div className={`${getCardBackground()} border rounded-3xl p-6 lg:p-8 transition-all duration-500`}>
+                <h2 className={`text-xl lg:text-2xl font-light mb-4 ${fontClass}`}>Add-Ons</h2>
+                <p className={`text-sm mb-4 ${getSecondaryTextColor()}`}>Toggle optional sections on your page.</p>
+                <div className="space-y-4">
+                  <label htmlFor="addon-image" className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className={`${preferences.theme === 'minimal' ? 'text-gray-900' : 'text-white'}`}>Image Box</div>
+                      <p className={`text-xs ${getSecondaryTextColor()}`}>Show a featured image/card.</p>
+                    </div>
+                    <input
+                      id="addon-image"
+                      type="checkbox"
+                      className="h-5 w-5"
+                      checked={preferences.sections.imageBox}
+                      onChange={(e) => updatePreferences({ sections: { ...preferences.sections, imageBox: e.target.checked } })}
+                    />
+                  </label>
+
+                  <label htmlFor="addon-booking" className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className={`${preferences.theme === 'minimal' ? 'text-gray-900' : 'text-white'}`}>Booking Form</div>
+                      <p className={`text-xs ${getSecondaryTextColor()}`}>Allow visitors to request a booking.</p>
+                    </div>
+                    <input
+                      id="addon-booking"
+                      type="checkbox"
+                      className="h-5 w-5"
+                      checked={preferences.sections.bookingForm}
+                      onChange={(e) => updatePreferences({ sections: { ...preferences.sections, bookingForm: e.target.checked } })}
+                    />
+                  </label>
+
+                  <label htmlFor="addon-shop" className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className={`${preferences.theme === 'minimal' ? 'text-gray-900' : 'text-white'}`}>Shop</div>
+                      <p className={`text-xs ${getSecondaryTextColor()}`}>Display a small product teaser.</p>
+                    </div>
+                    <input
+                      id="addon-shop"
+                      type="checkbox"
+                      className="h-5 w-5"
+                      checked={preferences.sections.shop}
+                      onChange={(e) => updatePreferences({ sections: { ...preferences.sections, shop: e.target.checked } })}
+                    />
+                  </label>
+
+                  <label htmlFor="addon-custom" className="flex items-center justify-between cursor-pointer">
+                    <div>
+                      <div className={`${preferences.theme === 'minimal' ? 'text-gray-900' : 'text-white'}`}>Custom Text</div>
+                      <p className={`text-xs ${getSecondaryTextColor()}`}>Show a small tagline or note.</p>
+                    </div>
+                    <input
+                      id="addon-custom"
+                      type="checkbox"
+                      className="h-5 w-5"
+                      checked={preferences.sections.customText}
+                      onChange={(e) => updatePreferences({ sections: { ...preferences.sections, customText: e.target.checked } })}
+                    />
+                  </label>
                 </div>
               </div>
 

@@ -325,6 +325,95 @@ export default function CreatorPage() {
               )}
             </div>
 
+            {/* Optional Sections (Add-Ons) */}
+            <div className="space-y-6">
+              {preferences.sections.imageBox && (
+                <div className={`relative backdrop-blur-xl border rounded-3xl p-6 transition-all duration-500 ${
+                  preferences.theme === 'minimal'
+                    ? 'bg-white/90 border-gray-200 shadow-gray-200/30'
+                    : 'bg-white/5 border-white/10 shadow-black/20'
+                }`}>
+                  <div className={`h-40 rounded-2xl w-full bg-gradient-to-br ${colorScheme.colors.join(' ')} flex items-center justify-center text-3xl`}>
+                    {profileImage.emoji}
+                  </div>
+                  <p className={`mt-3 text-sm ${getSecondaryTextColor()}`}>Featured image</p>
+                </div>
+              )}
+
+              {preferences.sections.bookingForm && (
+                <div className={`backdrop-blur-xl border rounded-3xl p-6 transition-all duration-500 space-y-3 ${
+                  preferences.theme === 'minimal'
+                    ? 'bg-white/90 border-gray-200'
+                    : 'bg-white/5 border-white/10'
+                }`}>
+                  <div className="text-center">
+                    <h3 className="text-lg font-medium">Request a Booking</h3>
+                    <p className={`text-xs ${getSecondaryTextColor()}`}>I’ll get back to you by email</p>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="Your name"
+                    className={`w-full px-4 py-3 rounded-xl border text-sm transition-all ${
+                      preferences.theme === 'minimal' ? 'bg-white border-gray-300 text-gray-900' : 'bg-white/10 border-white/20 text-white placeholder:text-gray-400'
+                    }`}
+                  />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    className={`w-full px-4 py-3 rounded-xl border text-sm transition-all ${
+                      preferences.theme === 'minimal' ? 'bg-white border-gray-300 text-gray-900' : 'bg-white/10 border-white/20 text-white placeholder:text-gray-400'
+                    }`}
+                  />
+                  <textarea
+                    rows={3}
+                    placeholder="What’s the request?"
+                    className={`w-full px-4 py-3 rounded-xl border text-sm transition-all resize-none ${
+                      preferences.theme === 'minimal' ? 'bg-white border-gray-300 text-gray-900' : 'bg-white/10 border-white/20 text-white placeholder:text-gray-400'
+                    }`}
+                  />
+                  <button
+                    className={`w-full py-3 rounded-xl font-medium transition ${
+                      preferences.theme === 'minimal' ? 'bg-gray-900 text-white hover:bg-gray-800' : 'bg-white text-black hover:bg-gray-100'
+                    }`}
+                  >
+                    Send Request
+                  </button>
+                </div>
+              )}
+
+              {preferences.sections.shop && (
+                <div className={`backdrop-blur-xl border rounded-3xl p-6 transition-all duration-500 ${
+                  preferences.theme === 'minimal' ? 'bg-white/90 border-gray-200' : 'bg-white/5 border-white/10'
+                }`}>
+                  <div className="flex items-center gap-4">
+                    <div className={`w-14 h-14 rounded-2xl flex items-center justify-center text-2xl ${
+                      preferences.theme === 'minimal' ? 'bg-gray-900 text-white' : 'bg-white text-black'
+                    }`}>
+                      🛍️
+                    </div>
+                    <div className="flex-1">
+                      <div className="font-medium">Featured Product</div>
+                      <div className={`text-xs ${getSecondaryTextColor()}`}>Limited drop • Ships worldwide</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="font-semibold">$29</div>
+                      <button className={`mt-1 px-3 py-1 rounded-lg text-xs ${
+                        preferences.theme === 'minimal' ? 'bg-gray-900 text-white' : 'bg-white text-black'
+                      }`}>
+                        View
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {preferences.sections.customText && (
+                <div className="text-center">
+                  <p className={`text-sm ${getSecondaryTextColor()}`}>“Creating daily. Thanks for the support!”</p>
+                </div>
+              )}
+            </div>
+
             {/* Footer */}
             <div className="text-center">
               <p className={`text-xs transition-all duration-500 ${
