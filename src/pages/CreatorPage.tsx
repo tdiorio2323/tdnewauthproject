@@ -440,7 +440,9 @@ export default function CreatorPage() {
 
               {preferences.sections.customText && (
                 <div className="text-center">
-                  <p className={`text-sm ${getSecondaryTextColor()}`}>“Creating daily. Thanks for the support!”</p>
+                  <p className={`text-sm ${getSecondaryTextColor()}`}>
+                    {preferences.sections.customTextContent || '“Creating daily. Thanks for the support!”'}
+                  </p>
                 </div>
               )}
             </div>

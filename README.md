@@ -82,7 +82,8 @@ VITE_SUPABASE_ANON_KEY=<your-anon-key>
 
 - After signing in at `/auth`, users land on `/work/link`.
 - Configure theme, font, color scheme, button style/layout, links, and add‑ons with a live preview.
-- Click “Save & View My Page” to persist and open `/:handle` in a new tab.
+- Autosave: Enabled by default (can be toggled). Manual “Save & View My Page” persists and opens `/:handle` in a new tab.
+- First-time setup: If you have no handle, a small modal prompts you to set one and seeds your profile.
 
 Supabase setup:
 - Add envs in `.env.local` as shown above.
