@@ -1,7 +1,7 @@
 'use client';
 
 import GlassMasterCard from '@/components/GlassMasterCard';
-import LogoCabana from '@/components/LogoCabana';
+
 import LinkButton, { LinkItem } from '@/components/LinkButton';
 import VipModule from '@/components/VipModule';
 
@@ -21,7 +21,7 @@ export default function Page() {
         <GlassMasterCard>
           {/* brand row only */}
           <div className="mb-5 flex items-center gap-2 text-xs text-white/70">
-            <LogoCabana className="h-4 w-4 opacity-90" />
+            <img src="/holographic-background.jpg" alt="Holographic Logo" className="h-4 w-4 opacity-90" />
             <span className="tracking-wide">CABANA • @joincabana</span>
           </div>
 

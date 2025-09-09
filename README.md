@@ -1,5 +1,8 @@
 # Welcome to your Lovable project
 
+![CI](https://img.shields.io/github/actions/workflow/status/tylerdiorio/tdnewauthproject/ci.yml?branch=main)
+[![codecov](https://codecov.io/gh/tylerdiorio/tdnewauthproject/branch/main/graph/badge.svg)](https://codecov.io/gh/tylerdiorio/tdnewauthproject)
+
 ## Project info
 
 **URL**: https://lovable.dev/projects/dbcb82db-3a5c-4d43-86a6-c004351ecb04

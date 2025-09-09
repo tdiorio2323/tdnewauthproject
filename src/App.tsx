@@ -4,10 +4,11 @@ import CreatorSignup from "./pages/CreatorSignup";
 import CustomizePage from "./pages/CustomizePage";
 import CreatorPage from "./pages/CreatorPage";
 import NotFound from "./pages/NotFound";
+import { ThemeProvider } from "./contexts/ThemeContext";
 
 export default function App() {
   return (
-    <>
+    <ThemeProvider>
       <Routes>
         <Route path="/" element={<Index />} />
         <Route path="/creator-signup" element={<CreatorSignup />} />
@@ -15,6 +16,6 @@ export default function App() {
         <Route path="/:handle" element={<CreatorPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
-    </>
+    </ThemeProvider>
   );
 }
