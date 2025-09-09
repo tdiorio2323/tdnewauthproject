@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { supabase, SUPABASE_ENABLED } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
+import { SUPABASE_ENABLED } from "@/env";
 import { useToast } from "@/hooks/use-toast";
-import { AuthError } from "@supabase/supabase-js";
 
 interface AuthPageProps {
   onLogin?: (role: 'customer' | 'brand' | 'admin') => void;
@@ -15,6 +15,7 @@ interface AuthPageProps {
 
 export const AuthPage = ({ onLogin }: AuthPageProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -79,29 +80,24 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
       }
 
       if (authResult.data.user && !isSignUp) {
+        const params = new URLSearchParams(location.search);
+        const redirect = params.get('redirect') || '/work/link';
         if (roleData) {
           const userRole = roleData.role;
 
           // Navigate based on role
-          if (userRole === 'admin') {
-            navigate('/admin');
-          } else if (userRole === 'brand') {
-            navigate('/brand');
-          } else {
-            navigate('/shop');
-          }
+          navigate(redirect);
 
           // Call onLogin if provided (for backward compatibility)
           if (onLogin) {
             onLogin(userRole);
           }
         } else {
-          // Default to customer role if no role found
-          navigate('/shop');
+          navigate(redirect);
         }
       }
 
-    } catch (error: AuthError | Error) {
+    } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
@@ -113,11 +109,15 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
   };
 
   const handleGoogleAuth = () => {
-    navigate('/shop'); // Mock Google auth
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect') || '/work/link';
+    navigate(redirect);
   };
 
   const handleAppleAuth = () => {
-    navigate('/shop'); // Mock Apple auth
+    const params = new URLSearchParams(location.search);
+    const redirect = params.get('redirect') || '/work/link';
+    navigate(redirect);
   };
 
   return (

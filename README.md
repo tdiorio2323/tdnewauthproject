@@ -78,6 +78,17 @@ VITE_SUPABASE_URL=https://<your-ref>.supabase.co
 VITE_SUPABASE_ANON_KEY=<your-anon-key>
 ```
 
+## Link Work Area
+
+- After signing in at `/auth`, users land on `/work/link`.
+- Configure theme, font, color scheme, button style/layout, links, and add‑ons with a live preview.
+- Click “Save & View My Page” to persist and open `/:handle` in a new tab.
+
+Supabase setup:
+- Add envs in `.env.local` as shown above.
+- Run `supabase/migrations/2025-09-09-link-page.sql` in the Supabase SQL Editor to create tables and RLS policies.
+- Restart dev server: `npm run dev`.
+
 ## Can I connect a custom domain to my Lovable project?
 
 Yes, you can!

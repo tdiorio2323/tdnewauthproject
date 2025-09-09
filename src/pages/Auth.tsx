@@ -2,9 +2,11 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { AuthPage } from "@/components/AuthPage";
+import { useLocation } from 'react-router-dom';
 
 const Auth = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -34,6 +36,9 @@ const Auth = () => {
     });
   }, [navigate]);
 
+  // Pass through redirect query if present
+  const params = new URLSearchParams(location.search);
+  const redirect = params.get('redirect') || undefined;
   return <AuthPage />;
 };
 

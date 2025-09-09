@@ -1,4 +1,4 @@
 // src/env.ts
-export const SUPABASE_ENABLED = true;
-export const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-export const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+export const SUPABASE_ENABLED = Boolean(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY);
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string | undefined;
+export const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;

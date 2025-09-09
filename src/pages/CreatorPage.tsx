@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTheme, FONTS, THEMES } from '../contexts/ThemeContext';
+import { SUPABASE_ENABLED } from '@/env';
+import { fetchPublicByHandle } from '@/services/supabase';
+import type { LinkItem } from '@/types';
 
 type Creator = {
   id: string;
@@ -41,9 +44,11 @@ export default function CreatorPage() {
   const { handle } = useParams<{ handle: string }>();
   const navigate = useNavigate();
   const { preferences } = useTheme();
+  const { updatePreferences } = useTheme();
   const [creator, setCreator] = useState<Creator | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [savedLinks, setSavedLinks] = useState<LinkItem[]>([]);
 
   useEffect(() => {
     if (!handle) {
@@ -52,9 +57,36 @@ export default function CreatorPage() {
       return;
     }
 
-    const fetchCreator = async () => {
+    const run = async () => {
       try {
-        // Demo mode - simulate creator data
+        if (SUPABASE_ENABLED && handle) {
+          const res = await fetchPublicByHandle(handle);
+          if (res && res.profile) {
+            setCreator({
+              id: res.profile.id,
+              handle: res.profile.handle || handle,
+              display_name: res.profile.display_name,
+              bio: res.profile.bio,
+              email: '',
+              created_at: new Date().toISOString(),
+            });
+            if (res.page) {
+              // Map saved prefs into ThemeContext
+              updatePreferences({
+                theme: (res.page.theme as any) || preferences.theme,
+                font: (res.page.font as any) || preferences.font,
+                colorScheme: (res.page.color_scheme as any) || preferences.colorScheme,
+                buttonStyle: (res.page.button_style as any) || preferences.buttonStyle,
+                buttonLayout: (res.page.button_layout as any) || preferences.buttonLayout,
+                sections: { ...preferences.sections, ...(res.page.sections || {}) },
+              });
+            }
+            setSavedLinks((res.links as any[])?.map((l, i) => ({ label: l.label, url: l.url, position: i })) || []);
+            setLoading(false);
+            return;
+          }
+        }
+        // Fallback demo
         const demoCreator = {
           id: '1',
           handle: handle?.toLowerCase() || 'demo',
@@ -63,18 +95,16 @@ export default function CreatorPage() {
           email: 'demo@example.com',
           created_at: new Date().toISOString()
         };
-
         setCreator(demoCreator);
-        console.log('Demo mode - Using demo creator data:', demoCreator);
+        setLoading(false);
       } catch (err) {
-        console.error('Error in demo mode:', err);
+        console.error('Public page load error:', err);
         setError(true);
-      } finally {
         setLoading(false);
       }
     };
 
-    fetchCreator();
+    run();
   }, [handle]);
 
   if (loading) {
@@ -270,6 +300,7 @@ export default function CreatorPage() {
             
             {/* Button Layout - Dynamic based on preferences */}
             <div className="space-y-8">
+              {(() => { /* compute link labels */ return null; })()}
               {preferences.buttonLayout === 'grid3x3' ? (
                 <div className="grid grid-cols-3 gap-4 max-w-xs mx-auto">
                   {['🔗', '📧', '🛍️', '📱', '🎵', '💼', '🎥', '📚', '✨'].map((emoji, index) => (
@@ -298,13 +329,13 @@ export default function CreatorPage() {
                     )}
                     
                     <div className="relative space-y-6">
-                      {[
-                        { label: 'Instagram', color: 'purple-400', emoji: '📸' },
-                        { label: 'YouTube', color: 'red-400', emoji: '🎥' },
-                        { label: 'TikTok', color: 'pink-400', emoji: '🎵' },
-                        { label: 'Shop', color: 'amber-400', emoji: '🛍️' },
-                        { label: 'Contact', color: 'teal-400', emoji: '📧' }
-                      ].map((item, index) => (
+                      {(savedLinks.length ? savedLinks.map(l => ({ label: l.label })) : [
+                        { label: 'Instagram' },
+                        { label: 'YouTube' },
+                        { label: 'TikTok' },
+                        { label: 'Shop' },
+                        { label: 'Contact' }
+                      ]).map((item, index) => (
                         <button 
                           key={item.label}
                           className={`w-full py-4 px-4 rounded-2xl border transition-all duration-300 hover:scale-[1.02] ${
@@ -314,7 +345,6 @@ export default function CreatorPage() {
                           } ${buttonStyle.class}`}
                         >
                           <span className="flex items-center justify-center gap-3">
-                            <span className="text-lg">{item.emoji}</span>
                             <span className="font-medium">{item.label}</span>
                           </span>
                         </button>

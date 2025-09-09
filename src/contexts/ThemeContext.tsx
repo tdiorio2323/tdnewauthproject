@@ -21,6 +21,10 @@ export interface StylePreferences {
     bookingForm: boolean;
     shop: boolean;
     customText: boolean;
+    customTextContent?: string;
+    imageUrl?: string;
+    bookingEmail?: string;
+    shopUrl?: string;
   };
 }
 
@@ -152,7 +156,11 @@ const defaultPreferences: StylePreferences = {
     imageBox: false,
     bookingForm: false,
     shop: false,
-    customText: false
+    customText: false,
+    customTextContent: '',
+    imageUrl: '',
+    bookingEmail: '',
+    shopUrl: ''
   }
 };
 
