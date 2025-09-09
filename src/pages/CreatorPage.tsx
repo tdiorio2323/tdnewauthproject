@@ -401,13 +401,14 @@ export default function CreatorPage() {
                       preferences.theme === 'minimal' ? 'bg-white border-gray-300 text-gray-900' : 'bg-white/10 border-white/20 text-white placeholder:text-gray-400'
                     }`}
                   />
-                  <button
-                    className={`w-full py-3 rounded-xl font-medium transition ${
+                  <a
+                    href={preferences.sections.bookingEmail ? `mailto:${preferences.sections.bookingEmail}` : '#'}
+                    className={`block text-center w-full py-3 rounded-xl font-medium transition ${
                       preferences.theme === 'minimal' ? 'bg-gray-900 text-white hover:bg-gray-800' : 'bg-white text-black hover:bg-gray-100'
                     }`}
                   >
                     Send Request
-                  </button>
+                  </a>
                 </div>
               )}
 
