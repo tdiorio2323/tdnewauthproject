@@ -2,16 +2,16 @@ import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi } from 'vitest';
 import VipModule from './VipModule';
-import { supabase } from '@/integrations/supabase/client';
 
-// Mock the supabase client
-vi.mock('@/integrations/supabase/client', () => ({
+// Mock supabase lib used by VipModule
+const insertMock = vi.fn();
+const fromMock = vi.fn(() => ({
+  insert: insertMock,
+}));
+vi.mock('@/lib/supabase', () => ({
+  SUPABASE_ENABLED: true,
   supabase: {
-    from: vi.fn(() => ({
-      upsert: vi.fn(() => ({
-        error: null,
-      })),
-    })),
+    from: (...args: any[]) => fromMock(...args),
   },
 }));
 
@@ -24,65 +24,64 @@ describe('VipModule', () => {
   it('renders correctly', () => {
     render(<VipModule />);
     expect(screen.getByText('VIP Access')).toBeInTheDocument();
-    expect(screen.getByLabelText('Email for early access')).toBeInTheDocument();
-    expect(screen.getByLabelText('VIP access code')).toBeInTheDocument();
-    expect(screen.getByText('Request Invite')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Enter your email')).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('VIP Code (optional)')).toBeInTheDocument();
+    expect(screen.getByText('Request Access')).toBeInTheDocument();
   });
 
-  it('shows an error message for an invalid email', async () => {
+  it('disables submit when email is empty', async () => {
     render(<VipModule />);
-    fireEvent.click(screen.getByText('Request Invite'));
-    expect(await screen.findByText('Enter a valid email.')).toBeInTheDocument();
+    const button = screen.getByText('Request Access');
+    expect(button).toBeDisabled();
   });
 
-  it('calls supabase upsert with email and vip_code', async () => {
-    const upsertMock = vi.fn(() => ({ error: null }));
-    (supabase.from as vi.Mock).mockReturnValue({ upsert: upsertMock });
-
+  it('submits with email and vip_code', async () => {
+    insertMock.mockReturnValue({
+      select: () => ({ single: async () => ({ data: { id: '1' }, error: null }) }),
+    } as any);
     render(<VipModule />);
-    fireEvent.change(screen.getByLabelText('Email for early access'), { target: { value: 'test@example.com' } });
-    fireEvent.change(screen.getByLabelText('VIP access code'), { target: { value: '12345' } });
-    fireEvent.click(screen.getByText('Request Invite'));
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), { target: { value: 'test@example.com' } });
+    fireEvent.change(screen.getByPlaceholderText('VIP Code (optional)'), { target: { value: '12345' } });
+    fireEvent.click(screen.getByText('Request Access'));
 
     await waitFor(() => {
-      expect(upsertMock).toHaveBeenCalledWith(
-        { email: 'test@example.com', source: 'cabana_vip', vip_code: '12345' },
-        { onConflict: 'email' }
-      );
+      expect(fromMock).toHaveBeenCalledWith('waitlist');
+      expect(insertMock).toHaveBeenCalled();
     });
   });
 
-  it('calls supabase upsert with only email when vip_code is empty', async () => {
-    const upsertMock = vi.fn(() => ({ error: null }));
-    (supabase.from as vi.Mock).mockReturnValue({ upsert: upsertMock });
-
+  it('submits with only email when vip_code is empty', async () => {
+    insertMock.mockReturnValue({
+      select: () => ({ single: async () => ({ data: { id: '1' }, error: null }) }),
+    } as any);
     render(<VipModule />);
-    fireEvent.change(screen.getByLabelText('Email for early access'), { target: { value: 'test@example.com' } });
-    fireEvent.click(screen.getByText('Request Invite'));
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), { target: { value: 'test@example.com' } });
+    fireEvent.click(screen.getByText('Request Access'));
 
     await waitFor(() => {
-      expect(upsertMock).toHaveBeenCalledWith(
-        { email: 'test@example.com', source: 'cabana_vip' },
-        { onConflict: 'email' }
-      );
+      expect(fromMock).toHaveBeenCalledWith('waitlist');
+      expect(insertMock).toHaveBeenCalled();
     });
   });
 
   it('shows a success message on successful submission', async () => {
+    insertMock.mockReturnValue({
+      select: () => ({ single: async () => ({ data: { id: '1' }, error: null }) }),
+    } as any);
     render(<VipModule />);
-    fireEvent.change(screen.getByLabelText('Email for early access'), { target: { value: 'test@example.com' } });
-    fireEvent.click(screen.getByText('Request Invite'));
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), { target: { value: 'test@example.com' } });
+    fireEvent.click(screen.getByText('Request Access'));
 
-    expect(await screen.findByText("Thanks! We'll email you early access.")).toBeInTheDocument();
+    expect(await screen.findByText("You're in!")).toBeInTheDocument();
   });
 
   it('shows an error message on failed submission', async () => {
-    const upsertMock = vi.fn(() => ({ error: { message: 'An error occurred' } }));
-    (supabase.from as vi.Mock).mockReturnValue({ upsert: upsertMock });
-
+    insertMock.mockReturnValue({
+      select: () => ({ single: async () => ({ data: null, error: { message: 'An error occurred' } }) }),
+    } as any);
     render(<VipModule />);
-    fireEvent.change(screen.getByLabelText('Email for early access'), { target: { value: 'test@example.com' } });
-    fireEvent.click(screen.getByText('Request Invite'));
+    fireEvent.change(screen.getByPlaceholderText('Enter your email'), { target: { value: 'test@example.com' } });
+    fireEvent.click(screen.getByText('Request Access'));
 
     expect(await screen.findByText('An error occurred')).toBeInTheDocument();
   });

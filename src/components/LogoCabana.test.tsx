@@ -20,7 +20,7 @@ describe('LogoCabana', () => {
     expect(snapshot).toMatchInlineSnapshot(
       `
       {
-        "ariaHidden": "",
+        "ariaHidden": "true",
         "class": "h-6 w-6",
         "hasDefs": true,
         "hasPath": true,
@@ -31,4 +31,3 @@ describe('LogoCabana', () => {
     );
   });
 });
-
