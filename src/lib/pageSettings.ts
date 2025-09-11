@@ -16,17 +16,19 @@ export type Theme =
   | "mystic"
   | "noir";
 export type ButtonStyle =
-  | "rounded"
-  | "sharp"
-  | "pill"
-  | "glow"
-  | "outline"
-  | "gradient"
-  | "hover_animated"
-  | "shadowed"
+  | "glass"
+  | "chrome" 
+  | "neon"
   | "minimal"
-  | "icon";
-export type ButtonLayout = "stacked" | "grid" | "row" | "carousel";
+  | "vintage"
+  | "cyberpunk"
+  | "nature"
+  | "kawaii"
+  | "grunge"
+  | "luxury";
+
+export type ButtonLayout = "rounded" | "square" | "circle" | "rounded-square";
+export type ProfileShape = "circle" | "rounded" | "diamond";
 
 export interface PageSettings {
   handle: string; // without leading @
@@ -35,9 +37,21 @@ export interface PageSettings {
   fontWeight?: number; // variable font axis (wght)
   colors: number[]; // [h1,h2,h3,h4]
   buttonStyle: ButtonStyle;
-  layout: ButtonLayout;
+  buttonLayout: ButtonLayout;
+  profileShape?: ProfileShape;
   icon: string;
   links?: { label: string; url: string; icon?: string }[];
+  title?: string;
+  subtitle?: string;
+  showTitle?: boolean;
+  showSubtitle?: boolean;
+  features?: {
+    tipJar: boolean;
+    tipAmount: string;
+    monthlySubscription: boolean;
+    subscriptionPrice: string;
+    subscriptionTitle: string;
+  };
   palette?: { preset?: string; accent?: string; autoAdjust?: boolean };
 }
 
@@ -119,9 +133,9 @@ const googleFontMap: Record<string, string> = {
   Lato: "Lato:wght@300;400;700",
   Oswald: "Oswald:wght@300;400;500;600;700",
   Raleway: "Raleway:wght@300;400;500;700",
-  "Comic Sans Alternative": "Comic+Neue:wght@300;400;700",
-  Gothic: "UnifrakturCook:wght@700",
-  "Brush Script": "Dancing+Script:wght@400;600;700",
+  "Dancing Script": "Dancing+Script:wght@400;600;700",
+  "Permanent Marker": "Permanent+Marker",
+  "Comic Neue": "Comic+Neue:wght@300;400;700",
 };
 
 export function loadGoogleFont(fontName: string) {

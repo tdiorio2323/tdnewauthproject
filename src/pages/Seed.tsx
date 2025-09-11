@@ -10,11 +10,11 @@ export default function Seed() {
     async function run() {
       await savePageSettings({
         handle,
-        theme: "holographic",
+        theme: "glass",
         font: "Inter",
         colors: [160, 100, 60, 15],
-        buttonStyle: "glow",
-        layout: "stacked",
+        buttonStyle: "glass",
+        buttonLayout: "rounded",
         icon: "✨",
       });
       navigate(`/${handle}`);

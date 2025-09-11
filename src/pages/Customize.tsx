@@ -3,15 +3,20 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Slider } from "@/components/ui/slider";
-import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
 import { savePageSettings } from "@/lib/pageSettings";
-import { loadGoogleFont } from "@/lib/pageSettings";
 import { ArrowLeft } from "lucide-react";
 import luxuryBg from "@/assets/luxury-background.png";
+
+// Import new components
+import { BackgroundSelector } from "@/components/customize/BackgroundSelector";
+import { ProfileImageSelector } from "@/components/customize/ProfileImageSelector";
+import { TitleSelector } from "@/components/customize/TitleSelector";
+import { FontSelector } from "@/components/customize/FontSelector";
+import { ButtonCustomizer } from "@/components/customize/ButtonCustomizer";
+import { LinksEditor } from "@/components/customize/LinksEditor";
+import { FeaturesSelector } from "@/components/customize/FeaturesSelector";
+import { Section } from "@/components/customize/Section";
 
 type Theme =
   | "minimal"
@@ -29,41 +34,52 @@ type Theme =
   | "mystic"
   | "noir";
 type ButtonStyle =
-  | "rounded"
-  | "sharp"
-  | "pill"
-  | "glow"
-  | "outline"
-  | "gradient"
-  | "hover_animated"
-  | "shadowed"
+  | "glass"
+  | "chrome" 
+  | "neon"
   | "minimal"
-  | "icon";
-type ButtonLayout = "stacked" | "grid" | "row";
+  | "vintage"
+  | "cyberpunk"
+  | "nature"
+  | "kawaii"
+  | "grunge"
+  | "luxury";
+
+type ButtonLayout = "rounded" | "square" | "circle" | "rounded-square";
+type ProfileShape = "circle" | "rounded" | "diamond";
+
+interface FeaturesConfig {
+  tipJar: boolean;
+  tipAmount: string;
+  monthlySubscription: boolean;
+  subscriptionPrice: string;
+  subscriptionTitle: string;
+}
 
 const fonts = [
   "Inter",
-  "Playfair",
+  "Playfair Display",
   "Space Mono",
-  "Poppins",
+  "Poppins", 
   "Montserrat",
   "Roboto",
   "Lato",
   "Oswald",
   "Raleway",
-  "Brush Script",
-  "Gothic",
-  "Comic Sans Alternative",
+  "Dancing Script",
+  "Permanent Marker",
+  "Comic Neue",
 ] as const;
 
 export default function Customize() {
   const navigate = useNavigate();
-  const [theme, setTheme] = useState<Theme>("minimal");
+  const [theme, setTheme] = useState<Theme>("glass");
   const [font, setFont] = useState<(typeof fonts)[number]>("Inter");
   const [fontWeight, setFontWeight] = useState<number>(500);
   const [colors, setColors] = useState<number[]>([58, 46, 32, 10]);
-  const [buttonStyle, setButtonStyle] = useState<ButtonStyle>("rounded");
-  const [layout, setLayout] = useState<ButtonLayout>("stacked");
+  const [buttonStyle, setButtonStyle] = useState<ButtonStyle>("glass");
+  const [buttonLayout, setButtonLayout] = useState<ButtonLayout>("rounded");
+  const [profileShape, setProfileShape] = useState<ProfileShape>("circle");
   const [icon, setIcon] = useState<string>("✨");
   const [palettePreset, setPalettePreset] = useState<string>("tropical");
   const [accent, setAccent] = useState<string>("#7c3aed");
@@ -74,6 +90,21 @@ export default function Customize() {
     { label: "Contact", url: "mailto:hello@example.com", icon: "✉️" },
   ]);
   const [handle, setHandle] = useState<string>("");
+  
+  // New states for title/subtitle
+  const [title, setTitle] = useState<string>("Your Name");
+  const [subtitle, setSubtitle] = useState<string>("Your tagline");
+  const [showTitle, setShowTitle] = useState<boolean>(true);
+  const [showSubtitle, setShowSubtitle] = useState<boolean>(true);
+  
+  // Features state
+  const [features, setFeatures] = useState<FeaturesConfig>({
+    tipJar: false,
+    tipAmount: "$5",
+    monthlySubscription: false,
+    subscriptionPrice: "$9.99",
+    subscriptionTitle: "VIP Access",
+  });
 
   const palette = useMemo(() => {
     // Interpret slider values as hues and derive a Tailwind-safe style object
@@ -119,42 +150,50 @@ export default function Customize() {
     }
   }, [theme]);
 
-  // Load selected font in preview
-  useMemo(() => {
-    loadGoogleFont(font);
-    return null;
-  }, [font]);
 
-  const buttonClass = useMemo(() => {
-    const base = "w-full text-sm font-medium";
-    const rounded = "rounded-md";
-    switch (buttonStyle) {
-      case "sharp":
-        return cn(base, "rounded-none");
-      case "pill":
-        return cn(base, "rounded-full");
-      case "glow":
-        return cn(
-          base,
-          rounded,
-          "shadow-[0_0_0] hover:shadow-[0_0_20px] transition-shadow"
-        );
-      case "outline":
-        return cn(base, rounded, "border-2 bg-transparent");
-      case "gradient":
-        return cn(base, rounded, "text-white");
-      case "hover_animated":
-        return cn(base, rounded, "transition-transform hover:scale-[1.02]");
-      case "shadowed":
-        return cn(base, rounded, "shadow-md hover:shadow-lg");
-      case "minimal":
-        return cn(base, "rounded-none border-b");
-      case "icon":
-        return cn(base, rounded, "flex items-center gap-2");
-      default:
-        return cn(base, rounded);
-    }
-  }, [buttonStyle]);
+  const getButtonClass = useMemo(() => {
+    const base = "w-full text-sm font-medium transition-all duration-200";
+    
+    // Shape classes
+    const shapeClass = () => {
+      switch (buttonLayout) {
+        case "square": return "rounded-none";
+        case "circle": return "rounded-full";
+        case "rounded-square": return "rounded-lg";
+        default: return "rounded-md";
+      }
+    };
+
+    // Style classes
+    const styleClass = () => {
+      switch (buttonStyle) {
+        case "glass":
+          return "backdrop-blur-sm bg-white/20 border border-white/30 hover:bg-white/30 hover:shadow-lg";
+        case "chrome":
+          return "bg-gradient-to-b from-gray-300 to-gray-500 text-gray-900 shadow-lg hover:from-gray-200 hover:to-gray-400";
+        case "neon":
+          return "bg-black/80 border-2 border-primary text-primary shadow-[0_0_10px] shadow-primary/50 hover:shadow-[0_0_20px] hover:shadow-primary/80";
+        case "minimal":
+          return "bg-transparent border-b-2 border-current rounded-none hover:bg-white/10";
+        case "vintage":
+          return "bg-amber-100 border-2 border-amber-800 text-amber-900 shadow-inner hover:bg-amber-200";
+        case "cyberpunk":
+          return "bg-gradient-to-r from-purple-500 to-cyan-500 text-white shadow-lg hover:from-purple-400 hover:to-cyan-400";
+        case "nature":
+          return "bg-gradient-to-b from-green-400 to-green-600 text-white shadow-md hover:from-green-300 hover:to-green-500";
+        case "kawaii":
+          return "bg-gradient-to-b from-pink-300 to-purple-400 text-white shadow-md hover:from-pink-200 hover:to-purple-300";
+        case "grunge":
+          return "bg-gray-800 border-2 border-gray-600 text-gray-100 shadow-lg hover:bg-gray-700";
+        case "luxury":
+          return "bg-gradient-to-b from-yellow-400 to-yellow-600 text-yellow-900 shadow-lg hover:from-yellow-300 hover:to-yellow-500";
+        default:
+          return "bg-primary text-primary-foreground hover:bg-primary/90";
+      }
+    };
+
+    return cn(base, shapeClass(), styleClass());
+  }, [buttonStyle, buttonLayout]);
 
   async function saveAndView() {
     if (!handle.trim()) return;
@@ -165,9 +204,15 @@ export default function Customize() {
       fontWeight,
       colors,
       buttonStyle,
-      layout,
+      buttonLayout,
+      profileShape,
       icon,
       links,
+      title,
+      subtitle,
+      showTitle,
+      showSubtitle,
+      features,
       palette: { preset: palettePreset, accent, autoAdjust },
     });
     navigate(`/${handle.replace(/^@/, "")}`);
@@ -199,74 +244,49 @@ export default function Customize() {
           Design your experience • Live preview
         </p>
 
-        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-[1fr_360px]">
-          {/* Left controls */}
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-[1fr_380px]">
+          {/* Left controls - organized in order */}
           <div className="space-y-6">
-            {/* Theme */}
-            <Section title="Choose Your Theme">
-              <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-                {(
-                  [
-                    { id: "minimal", label: "Minimal", hint: "Clean & Simple" },
-                    {
-                      id: "holographic",
-                      label: "Holographic",
-                      hint: "Colorful Gradients",
-                    },
-                    { id: "cyberpunk", label: "Cyberpunk", hint: "Neon Glow" },
-                    { id: "glass", label: "Glassmorphism", hint: "Frosted Glass" },
-                    { id: "dark", label: "Dark Mode" },
-                    { id: "pastel", label: "Pastel Dreams" },
-                    { id: "vintage", label: "Vintage Retro" },
-                    { id: "sci_fi", label: "Futuristic Sci‑Fi" },
-                    { id: "nature", label: "Nature Inspired" },
-                    { id: "luxury_gold", label: "Luxury Gold" },
-                    { id: "grunge", label: "Grunge Punk" },
-                    { id: "kawaii", label: "Kawaii Cute" },
-                    { id: "mystic", label: "Mystic Fantasy" },
-                    { id: "noir", label: "Seductive Noir" },
-                  ] as { id: Theme; label: string; hint?: string }[]
-                ).map((t) => (
-                  <Choice
-                    key={t.id}
-                    active={theme === t.id}
-                    onClick={() => setTheme(t.id)}
-                    label={t.label}
-                    hint={t.hint}
-                  />
-                ))}
-              </div>
-            </Section>
+            {/* 1. Background */}
+            <BackgroundSelector theme={theme} setTheme={setTheme} />
 
-            {/* Font */}
-            <Section title="Select Your Font">
-              <RadioGroup
-                className="grid grid-cols-1 gap-2"
-                value={font}
-                onValueChange={(v: string) => setFont(v as (typeof fonts)[number])}
-              >
-                {fonts.map((f) => (
-                  <label
-                    key={f}
-                    className={cn(
-                      "flex cursor-pointer items-center justify-between rounded-lg border bg-white px-3 py-3 text-sm",
-                      font === f && "border-primary/60 ring-2 ring-primary/20"
-                    )}
-                  >
-                    <div className="flex items-center gap-3">
-                      <RadioGroupItem value={f} id={`font-${f}`} />
-                      <span style={{ fontFamily: f }}>{f}</span>
-                    </div>
-                  </label>
-                ))}
-              </RadioGroup>
-              <div className="mt-3">
-                <Label className="text-xs text-slate-600">Font Weight</Label>
-                <Slider value={[fontWeight]} min={300} max={800} step={50} onValueChange={(v) => setFontWeight(v[0] || 500)} />
-              </div>
-            </Section>
+            {/* 2. Profile Image */}
+            <ProfileImageSelector 
+              icon={icon} 
+              setIcon={setIcon}
+              profileShape={profileShape}
+              setProfileShape={setProfileShape}
+            />
 
-            {/* Color Scheme */}
+            {/* 3. Title & Subtitle */}
+            <TitleSelector
+              title={title}
+              setTitle={setTitle}
+              subtitle={subtitle}
+              setSubtitle={setSubtitle}
+              showTitle={showTitle}
+              setShowTitle={setShowTitle}
+              showSubtitle={showSubtitle}
+              setShowSubtitle={setShowSubtitle}
+            />
+
+            {/* 4. Font */}
+            <FontSelector
+              font={font}
+              setFont={setFont}
+              fontWeight={fontWeight}
+              setFontWeight={setFontWeight}
+            />
+
+            {/* 5. Buttons */}
+            <ButtonCustomizer
+              buttonStyle={buttonStyle}
+              setButtonStyle={setButtonStyle}
+              buttonLayout={buttonLayout}
+              setButtonLayout={setButtonLayout}
+            />
+
+            {/* 6. Colors */}
             <Section title="Color Scheme">
               <div className="space-y-4">
                 <div className="flex flex-wrap gap-2">
@@ -279,8 +299,9 @@ export default function Customize() {
                     <button
                       key={p.id}
                       className={cn(
-                        "rounded-full border px-3 py-1 text-xs",
-                        palettePreset === p.id && "border-primary bg-primary/10"
+                        "rounded-full backdrop-blur-sm bg-white/20 border border-white/30 px-3 py-1 text-xs text-white transition-all",
+                        "hover:bg-white/30",
+                        palettePreset === p.id && "border-primary/60 ring-2 ring-primary/40 bg-white/30"
                       )}
                       onClick={() => {
                         setPalettePreset(p.id);
@@ -291,156 +312,35 @@ export default function Customize() {
                     </button>
                   ))}
                 </div>
-                <div className="grid grid-cols-2 gap-4 items-center">
-                  <div>
-                    <Label className="text-xs font-medium text-slate-900">Accent Color</Label>
-                    <input type="color" value={accent} onChange={(e) => setAccent(e.target.value)} className="h-10 w-full rounded border" />
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Switch checked={autoAdjust} onCheckedChange={setAutoAdjust} />
-                    <Label className="text-xs text-slate-700">Auto-adjust theme</Label>
-                  </div>
-                </div>
-                {[0, 1, 2, 3].map((i) => (
-                  <div key={i} className="space-y-2">
-                    <Label className="text-xs font-medium text-slate-900">Tone {i + 1}</Label>
-                    <Slider
-                      value={[colors[i]]}
-                      onValueChange={(v) =>
-                        setColors((c) => {
-                          const nc = [...c];
-                          nc[i] = v[0] ?? 0;
-                          return nc;
-                        })
-                      }
-                      max={180}
-                    />
-                  </div>
-                ))}
-              </div>
-            </Section>
-
-            {/* Button style & layout */}
-            <div className="grid gap-6 md:grid-cols-2">
-              <Section title="Button Style">
-                <div className="space-y-2">
-                  {(
-                    [
-                      { id: "rounded", label: "Rounded" },
-                      { id: "sharp", label: "Sharp" },
-                      { id: "pill", label: "Pill" },
-                      { id: "glow", label: "Glow" },
-                      { id: "outline", label: "Outlined" },
-                      { id: "gradient", label: "Gradient Fill" },
-                      { id: "hover_animated", label: "Animated Hover" },
-                      { id: "shadowed", label: "Shadowed" },
-                      { id: "icon", label: "Icon‑Integrated" },
-                      { id: "minimal", label: "Minimal Line" },
-                    ] as { id: ButtonStyle; label: string }[]
-                  ).map((opt) => (
-                    <Choice
-                      key={opt.id}
-                      active={buttonStyle === opt.id}
-                      onClick={() => setButtonStyle(opt.id)}
-                      label={opt.label}
-                      preview
-                    />
-                  ))}
-                </div>
-              </Section>
-
-              <Section title="Button Layout">
-                <div className="space-y-2">
-                  {(
-                    [
-                      { id: "stacked", label: "Stacked Buttons" },
-                      { id: "grid", label: "3x3 Icon Grid" },
-                      { id: "row", label: "Horizontal Row" },
-                    ] as { id: ButtonLayout; label: string }[]
-                  ).map((opt) => (
-                    <Choice
-                      key={opt.id}
-                      active={layout === opt.id}
-                      onClick={() => setLayout(opt.id)}
-                      label={opt.label}
-                    />
-                  ))}
-                </div>
-              </Section>
-            </div>
-
-            {/* Profile picture */}
-            <Section title="Choose Profile Picture">
-              <div className="grid grid-cols-4 gap-3 sm:grid-cols-6">
-                {"✨⭐️💎⚡️🌿🔥🎯🚀🌈🍩🪩💜".split("").map((em, idx) => (
-                  <button
-                    key={`${em}-${idx}`}
-                    onClick={() => setIcon(em)}
-                    className={cn(
-                      "aspect-square rounded-full border bg-white text-xl",
-                      icon === em && "border-primary/60 ring-2 ring-primary/20"
-                    )}
-                  >
-                    {em}
-                  </button>
-                ))}
-              </div>
-              <p className="mt-2 text-center text-xs text-slate-500">
-                Selected: <span className="font-medium">{icon}</span>
-              </p>
-            </Section>
-
-            {/* Links */}
-            <Section title="Links">
-              <div className="space-y-3">
-                {links.map((lnk, idx) => (
-                  <div key={idx} className="grid grid-cols-12 gap-2 items-center">
-                    <Input
-                      className="col-span-4"
-                      placeholder="Label"
-                      value={lnk.label}
-                      onChange={(e) =>
-                        setLinks((arr) => arr.map((l, i) => (i === idx ? { ...l, label: e.target.value } : l)))
-                      }
-                    />
-                    <Input
-                      className="col-span-7"
-                      placeholder="https://..."
-                      value={lnk.url}
-                      onChange={(e) =>
-                        setLinks((arr) => arr.map((l, i) => (i === idx ? { ...l, url: e.target.value } : l)))
-                      }
-                    />
-                    <Button
-                      variant="ghost"
-                      className="col-span-1"
-                      onClick={() => setLinks((arr) => arr.filter((_, i) => i !== idx))}
-                    >
-                      ✕
-                    </Button>
-                  </div>
-                ))}
-                <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => setLinks((arr) => [...arr, { label: "New Link", url: "" }])}
-                  >
-                    + Add Link
-                  </Button>
+                <div>
+                  <label className="text-xs text-white/80 mb-2 block">Accent Color</label>
+                  <input 
+                    type="color" 
+                    value={accent} 
+                    onChange={(e) => setAccent(e.target.value)} 
+                    className="h-10 w-full rounded border border-white/30" 
+                  />
                 </div>
               </div>
             </Section>
 
-            {/* Social handle */}
-            <Section title="Social Handle (Optional)">
+            {/* 7. Links */}
+            <LinksEditor links={links} setLinks={setLinks} />
+
+            {/* 8. Features */}
+            <FeaturesSelector features={features} setFeatures={setFeatures} />
+
+            {/* 9. Handle */}
+            <Section title="Your Handle">
               <div className="space-y-2">
                 <Input
                   placeholder="@yourusername"
                   value={handle}
                   onChange={(e) => setHandle(e.target.value)}
+                  className="bg-white border-white/30 text-black placeholder:text-black/60"
                 />
-                <p className="text-xs text-slate-500">
-                  Your social media handle (Instagram, Twitter, etc.)
+                <p className="text-xs text-white/60">
+                  Your unique link will be: lovable.app/{handle.replace(/^@/, "")}
                 </p>
               </div>
             </Section>
@@ -451,92 +351,69 @@ export default function Customize() {
             <Section title="Live Preview">
               <Card
                 className={cn(
-                  "mx-auto w-full max-w-xs rounded-2xl border p-6 text-center",
+                  "mx-auto w-full max-w-xs rounded-2xl border backdrop-blur-sm bg-white/10 border-white/20 p-6 text-center",
                   themeClass
                 )}
-                style={{
-                  // Color accents used inside the preview card
-                  // These styles are only for preview; not global theme
-                  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                  // @ts-ignore
-                  "--preview-primary": palette.primary,
-                }}
               >
-                <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border bg-white text-xl">
-                  {icon}
-                </div>
-                <div className="text-sm" style={{ fontFamily: font, fontWeight }}>{handle || "tyler-diorio"}</div>
-                <div className="mb-4 text-xs text-slate-500">
-                  @{(handle || "tyler-diorio").replace(/^@/, "")}
+                {/* Profile picture with shape */}
+                <div className={cn(
+                  "mx-auto mb-4 flex h-14 w-14 items-center justify-center border bg-white text-xl",
+                  profileShape === "circle" && "rounded-full",
+                  profileShape === "rounded" && "rounded-lg", 
+                  profileShape === "diamond" && "rotate-45 rounded-lg"
+                )}>
+                  <span className={profileShape === "diamond" ? "-rotate-45" : ""}>
+                    {icon}
+                  </span>
                 </div>
 
-                {layout === "stacked" ? (
-                  <div className="space-y-2">
-                    {(links.length ? links : [{ label: "Link", url: "#" }]).map((l) => (
-                      <a key={l.label} href={l.url} target="_blank" rel="noreferrer">
-                        <Button
-                          className={cn(buttonClass, "w-full")}
-                          style={{
-                            background:
-                              buttonStyle === "gradient"
-                                ? `linear-gradient(135deg, ${accent}, ${palette.secondary})`
-                                : undefined,
-                            backgroundColor:
-                              buttonStyle === "outline" || buttonStyle === "minimal"
-                                ? "transparent"
-                                : accent,
-                            color:
-                              buttonStyle === "outline" || buttonStyle === "minimal" ? accent : "white",
-                            borderColor: buttonStyle === "outline" ? accent : undefined,
-                          }}
-                        >
-                          {buttonStyle === "icon" && l.icon ? <span className="mr-1">{l.icon}</span> : null}
-                          {l.label}
-                        </Button>
-                      </a>
-                    ))}
+                {/* Title and subtitle */}
+                {showTitle && (
+                  <div 
+                    className="text-sm font-medium text-white" 
+                    style={{ fontFamily: font, fontWeight }}
+                  >
+                    {title || handle || "Your Name"}
                   </div>
-                ) : layout === "row" ? (
-                  <div className="flex gap-2 overflow-x-auto py-1">
-                    {(links.length ? links : []).map((l, i) => (
-                      <a key={`${l.label}-${i}`} href={l.url} target="_blank" rel="noreferrer">
-                        <Button
-                          className={cn(buttonClass, "whitespace-nowrap")}
-                          style={{ backgroundColor: accent, color: "white" }}
-                        >
-                          {l.label}
-                        </Button>
-                      </a>
-                    ))}
+                )}
+                
+                {showSubtitle && (
+                  <div className="mb-4 text-xs text-white/70">
+                    {subtitle}
                   </div>
-                ) : (
-                  <div className="grid grid-cols-3 gap-2">
-                    {(links.length ? links : []).slice(0, 9).map((l, i) => (
-                      <a
-                        key={`${l.label}-${i}`}
-                        href={l.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className={cn(
-                          buttonClass,
-                          "aspect-square rounded-lg bg-white text-xl flex items-center justify-center"
-                        )}
-                        style={{ borderColor: accent }}
-                      >
-                        {l.icon || l.label[0]}
-                      </a>
-                    ))}
+                )}
+
+                {/* Links */}
+                <div className="space-y-2 mb-4">
+                  {(links.length ? links : [{ label: "Sample Link", url: "#", icon: "🔗" }]).map((l, idx) => (
+                    <div key={idx} className={getButtonClass}>
+                      {l.icon && <span className="mr-2">{l.icon}</span>}
+                      {l.label}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Features preview */}
+                {features.tipJar && (
+                  <div className={cn(getButtonClass, "mb-2")}>
+                    💰 Tip {features.tipAmount}
+                  </div>
+                )}
+                
+                {features.monthlySubscription && (
+                  <div className={cn(getButtonClass, "mb-4")}>
+                    ⭐ {features.subscriptionTitle} - {features.subscriptionPrice}/mo
                   </div>
                 )}
 
                 <Button
-                  className="mt-6 w-full"
+                  className="mt-6 w-full backdrop-blur-sm bg-primary text-primary-foreground hover:bg-primary/90"
                   disabled={!handle.trim()}
                   onClick={saveAndView}
                 >
                   Save & View My Page
                 </Button>
-                <p className="mt-2 text-[10px] text-slate-400">
+                <p className="mt-2 text-[10px] text-white/60">
                   Live preview • Updates as you customize
                 </p>
               </Card>
@@ -548,47 +425,3 @@ export default function Customize() {
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border bg-white/95 p-5 shadow-sm">
-      <h2 className="mb-3 text-sm font-semibold text-slate-900">{title}</h2>
-      {children}
-    </div>
-  );
-}
-
-function Choice({
-  active,
-  onClick,
-  label,
-  hint,
-  preview,
-}: {
-  active: boolean;
-  onClick: () => void;
-  label: string;
-  hint?: string;
-  preview?: boolean;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className={cn(
-        "w-full rounded-lg border bg-white p-3 text-left text-sm transition-colors hover:bg-slate-50",
-        active && "border-primary/60 ring-2 ring-primary/20"
-      )}
-    >
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <div className="font-medium">{label}</div>
-          {hint && <div className="text-xs text-slate-500">{hint}</div>}
-        </div>
-        {preview && (
-          <div className="hidden h-7 w-24 items-center justify-center rounded-md bg-slate-900 text-[10px] text-white sm:flex">
-            Preview
-          </div>
-        )}
-      </div>
-    </button>
-  );
-}
