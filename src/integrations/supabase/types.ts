@@ -53,6 +53,13 @@ export type Database = {
             referencedRelation: "pages"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "clicks_page_id_fkey"
+            columns: ["page_id"]
+            isOneToOne: false
+            referencedRelation: "pages_public"
+            referencedColumns: ["id"]
+          },
         ]
       }
       pages: {
@@ -141,7 +148,54 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      pages_public: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          blocks: Json | null
+          created_at: string | null
+          custom_domain: string | null
+          handle: string | null
+          id: string | null
+          pixels: Json | null
+          seo: Json | null
+          theme: Json | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          blocks?: Json | null
+          created_at?: string | null
+          custom_domain?: string | null
+          handle?: string | null
+          id?: string | null
+          pixels?: Json | null
+          seo?: Json | null
+          theme?: Json | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          blocks?: Json | null
+          created_at?: string | null
+          custom_domain?: string | null
+          handle?: string | null
+          id?: string | null
+          pixels?: Json | null
+          seo?: Json | null
+          theme?: Json | null
+          title?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never

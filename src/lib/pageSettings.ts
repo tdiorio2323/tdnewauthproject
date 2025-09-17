@@ -108,8 +108,9 @@ export async function savePageSettings(settings: PageSettings): Promise<{ ok: bo
 export async function loadPageSettings(handleRaw: string): Promise<PageSettings | null> {
   const handle = normalizeHandle(handleRaw);
   try {
+    // Use the safe public view to avoid exposing password hashes
     const { data, error } = await supabase
-      .from('pages')
+      .from('pages_public')
       .select('title, bio, theme, blocks')
       .eq('handle', handle)
       .maybeSingle();
