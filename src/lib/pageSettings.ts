@@ -1,4 +1,5 @@
-import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
+import type { Json } from "@/integrations/supabase/types";
 
 export type Theme =
   | "minimal"
@@ -64,29 +65,38 @@ export async function savePageSettings(settings: PageSettings): Promise<{ ok: bo
   const payload = { ...settings, handle };
 
   try {
-    if (SUPABASE_ENABLED) {
-      const auth = await supabase.auth.getUser();
-      const userId = auth?.data?.user?.id ?? null;
-      // Table "pages": handle (text PK/unique), user_id (uuid), settings (jsonb)
-      type PagesRow = { handle: string; user_id: string | null; settings: PageSettings; updated_at?: string };
-      type UpsertOptions = { onConflict?: string };
-      type UpsertResult = Promise<{ error: { message?: string } | null }>;
-      type SelectResult<T> = Promise<{ data: T | null; error: { message?: string } | null }>;
-      type PagesQuery = {
-        upsert: (value: Partial<PagesRow>, opts?: UpsertOptions) => UpsertResult;
-        select: (cols: string) => {
-          eq: (col: string, val: string) => { maybeSingle: () => SelectResult<{ settings: PageSettings }> };
-        };
-      };
-      const pages = (supabase as unknown as { from: (table: string) => PagesQuery }).from("pages");
-      const { error } = await pages.upsert(
-        { handle, user_id: userId, settings: payload, updated_at: new Date().toISOString() },
-        { onConflict: "handle" }
-      );
-      if (error) throw error;
-    } else {
+    const auth = await supabase.auth.getUser();
+    const userId = auth?.data?.user?.id;
+    
+    if (!userId) {
+      // Fallback to localStorage if not authenticated
       localStorage.setItem(`page:${handle}`, JSON.stringify(payload));
+      return { ok: true };
     }
+
+    // Update the pages table with new structure
+    const { error } = await supabase
+      .from('pages')
+      .upsert(
+        { 
+          handle, 
+          user_id: userId, 
+          title: payload.title,
+          bio: payload.subtitle,
+          theme: { preset: 'minimal', accent: '#8B5CF6' },
+          blocks: payload.links?.map((link, index) => ({
+            id: `link_${index}`,
+            type: 'url',
+            label: link.label,
+            href: link.url,
+            icon: link.icon,
+            enabled: true
+          })) || []
+        },
+        { onConflict: 'handle' }
+      );
+    
+    if (error) throw error;
     return { ok: true };
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
@@ -98,23 +108,40 @@ export async function savePageSettings(settings: PageSettings): Promise<{ ok: bo
 export async function loadPageSettings(handleRaw: string): Promise<PageSettings | null> {
   const handle = normalizeHandle(handleRaw);
   try {
-    if (SUPABASE_ENABLED) {
-      type PagesQuery = {
-        select: (cols: string) => {
-          eq: (col: string, val: string) => { maybeSingle: () => Promise<{ data: { settings?: PageSettings } | null; error: { message?: string } | null }> };
-        };
-      };
-      const pages = (supabase as unknown as { from: (table: string) => PagesQuery }).from("pages");
-      const { data, error } = await pages
-        .select("settings")
-        .eq("handle", handle)
-        .maybeSingle();
-      if (error) throw error;
-      return (data?.settings as PageSettings) || null;
-    } else {
+    const { data, error } = await supabase
+      .from('pages')
+      .select('title, bio, theme, blocks')
+      .eq('handle', handle)
+      .maybeSingle();
+    
+    if (error) throw error;
+    
+    if (!data) {
+      // Fallback to localStorage
       const raw = localStorage.getItem(`page:${handle}`);
       return raw ? (JSON.parse(raw) as PageSettings) : null;
     }
+
+    // Convert new structure back to old PageSettings format for compatibility
+    const blocks = data.blocks as any[] || [];
+    return {
+      handle,
+      theme: 'minimal',
+      font: 'Inter',
+      colors: [210, 280, 150, 80],
+      buttonStyle: 'glass',
+      buttonLayout: 'rounded',
+      icon: '/lovable-uploads/d5a7b980-44ec-49f6-bee8-c6858ca93ae5.png',
+      title: data.title || '',
+      subtitle: data.bio || '',
+      showTitle: true,
+      showSubtitle: true,
+      links: blocks.filter((block: any) => block.type === 'url').map((block: any) => ({
+        label: block.label,
+        url: block.href,
+        icon: block.icon
+      })) || []
+    };
   } catch (e) {
     console.error("Failed to load page settings", e);
     return null;

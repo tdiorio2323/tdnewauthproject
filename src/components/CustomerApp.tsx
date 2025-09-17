@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase, SUPABASE_ENABLED } from '@/integrations/supabase/client';
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from 'sonner';
 
 interface Product {
@@ -53,18 +53,8 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
 
   const fetchProducts = async () => {
     try {
-      if (!SUPABASE_ENABLED) {
-        // No backend configured; show empty catalog gracefully
-        setProducts([]);
-        return;
-      }
-      const { data, error } = await supabase
-        .from('products')
-        .select('*')
-        .eq('is_available', true);
-
-      if (error) throw error;
-      setProducts(data || []);
+      // Show empty catalog since we don't have products table in new schema
+      setProducts([]);
     } catch (error) {
       console.error('Error fetching products:', error);
       toast.error('Failed to load products');

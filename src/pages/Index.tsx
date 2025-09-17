@@ -1,25 +1,19 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 
 const Index = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If Supabase is not configured, fall back to auth route
-    if (!SUPABASE_ENABLED) {
-      navigate('/auth');
-      return;
-    }
-
     // Check current session
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Get user role from users table
+        // Get user role from profiles table
         supabase
-          .from('users')
+          .from('profiles')
           .select('role')
-          .eq('id', session.user.id)
+          .eq('user_id', session.user.id)
           .single()
           .then(({ data }) => {
             if (data) {
@@ -28,8 +22,10 @@ const Index = () => {
               } else if (data.role === 'brand') {
                 navigate('/brand');
               } else {
-                navigate('/shop');
+                navigate('/customize');
               }
+            } else {
+              navigate('/customize');
             }
           });
       } else {
@@ -42,9 +38,9 @@ const Index = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_IN' && session) {
         supabase
-          .from('users')
+          .from('profiles')
           .select('role')
-          .eq('id', session.user.id)
+          .eq('user_id', session.user.id)
           .single()
           .then(({ data }) => {
             if (data) {
@@ -53,8 +49,10 @@ const Index = () => {
               } else if (data.role === 'brand') {
                 navigate('/brand');
               } else {
-                navigate('/shop');
+                navigate('/customize');
               }
+            } else {
+              navigate('/customize');
             }
           });
       } else if (event === 'SIGNED_OUT') {

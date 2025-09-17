@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Eye, EyeOff, Sparkles } from "lucide-react";
-import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface AuthPageProps {
@@ -35,11 +35,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
     setIsLoading(true);
     
     try {
-      if (!SUPABASE_ENABLED) {
-        // Demo fallback: navigate to shop without real auth
-        navigate('/shop');
-        return;
-      }
+      // Use Supabase auth
       let authResult;
       
       if (isSignUp) {
@@ -67,15 +63,15 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
       }
 
       if (authResult.data.user && !isSignUp) {
-        // Get user role from user_roles table
-        const { data: roleData } = await supabase
-          .from('user_roles')
+        // Get user role from profiles table
+        const { data: profileData } = await supabase
+          .from('profiles')
           .select('role')
           .eq('user_id', authResult.data.user.id)
           .single();
 
-        if (roleData) {
-          const userRole = roleData.role;
+        if (profileData) {
+          const userRole = profileData.role as 'customer' | 'brand' | 'admin';
           
           // Navigate based on role
           if (userRole === 'admin') {
@@ -83,7 +79,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
           } else if (userRole === 'brand') {
             navigate('/brand');
           } else {
-            navigate('/shop');
+            navigate('/customize');
           }
           
           // Call onLogin if provided (for backward compatibility)
@@ -91,8 +87,15 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
             onLogin(userRole);
           }
         } else {
-          // Default to customer role if no role found
-          navigate('/shop');
+          // Create profile for new user and default to customer role
+          await supabase
+            .from('profiles')
+            .insert({ 
+              user_id: authResult.data.user.id, 
+              email: authResult.data.user.email,
+              role: 'customer' 
+            });
+          navigate('/customize');
         }
       }
 

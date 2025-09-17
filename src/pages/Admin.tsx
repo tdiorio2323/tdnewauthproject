@@ -1,17 +1,12 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import SuperAdminDashboard from "@/components/SuperAdminDashboard";
 
 const Admin = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If Supabase isn't configured, send user to auth
-    if (!SUPABASE_ENABLED) {
-      navigate('/auth');
-      return;
-    }
     // Check if user is authenticated and has admin role
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
@@ -20,13 +15,13 @@ const Admin = () => {
       }
 
       supabase
-        .from('user_roles')
+        .from('profiles')
         .select('role')
         .eq('user_id', session.user.id)
         .single()
         .then(({ data }) => {
           if (!data || data.role !== 'admin') {
-            navigate('/shop');
+            navigate('/customize');
           }
         });
     });

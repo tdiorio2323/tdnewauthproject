@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { supabase, SUPABASE_ENABLED } from "@/integrations/supabase/client";
+import { supabase } from "@/integrations/supabase/client";
 import { AuthPage } from "@/components/AuthPage";
 
 const Auth = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // If Supabase isn't configured, just render the auth UI without redirects
-    if (!SUPABASE_ENABLED) return;
     // Check if user is already logged in
-      supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
-        // Get user role from user_roles table
+        // Get user role from profiles table
         supabase
-          .from('user_roles')
+          .from('profiles')
           .select('role')
           .eq('user_id', session.user.id)
           .single()
@@ -25,11 +23,11 @@ const Auth = () => {
               } else if (data.role === 'brand') {
                 navigate('/brand');
               } else {
-                navigate('/shop');
+                navigate('/customize');
               }
             } else {
-              // Default to shop if no role found
-              navigate('/shop');
+              // Default to customize if no role found
+              navigate('/customize');
             }
           });
       }
