@@ -26,3 +26,9 @@ dist-ssr
 .vercel
 
 apsco-sports-enterprises
+node_modules/
+.pnpm/
+.next/
+dist/
+build/
+.vercel/output/

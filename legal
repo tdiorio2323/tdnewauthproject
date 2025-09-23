@@ -1,0 +1,38 @@
+Cabana Legal Pack Checklist
+
+md_content = """# Cabana Legal Pack – Checklist
+
+## 1. Business Formation
+- [ ] Register LLC or confirm best structure (LLC / S-Corp / C-Corp)  
+- [ ] Draft Operating Agreement  
+- [ ] Obtain EIN (Employer Identification Number)  
+
+## 2. Core Website Policies
+- [ ] Draft Terms of Service (TOS)  
+- [ ] Draft Privacy Policy  
+
+## 3. Contracts
+- [ ] Create Creator Agreement (payouts, ownership, termination clauses)  
+- [ ] Create Vendor/Partner Agreements  
+
+## 4. IP Protection
+- [ ] Trademark registration for 'Cabana' name and logo  
+- [ ] Copyright assignment for platform code and design  
+- [ ] DMCA Safe Harbor Policy + Takedown Procedure  
+
+## 5. Compliance
+- [ ] 2257 record-keeping policy (if adult content applies)  
+- [ ] Age verification process  
+- [ ] KYC/AML compliance for payments  
+
+## 6. Risk & Coverage
+- [ ] Business insurance (liability + cyber liability)  
+- [ ] Legal disclaimers (financial risk, user conduct, third-party actions)  
+"""
+
+# Save to file
+md_path = "/mnt/data/Cabana_Legal_Pack_Checklist.md"
+with open(md_path, "w") as f:
+    f.write(md_content)
+
+md_path
