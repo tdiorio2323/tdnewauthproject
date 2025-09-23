@@ -22,6 +22,7 @@
     "@testing-library/jest-dom": "^6.4.8",
     "@testing-library/react": "^16.0.0",
     "@vitejs/plugin-react": "^5.0.2",
+    "@vitejs/plugin-react-swc": "^4.1.0",
     "autoprefixer": "^10.4.0",
     "jsdom": "^24.1.0",
     "openai": "^5.16.0",
