@@ -1,12 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { PalmLeafCluster } from "../components/PalmLeaf";
 import WaitlistForm from "../components/WaitlistForm";
-import {
-	frostedCardStyle,
-	frostedNavStyle,
-	holographicGradient,
-} from "../lib/frosted";
 
 export default function Index() {
 	const [mode, setMode] = useState<"waitlist" | "creator">("waitlist");
@@ -22,10 +16,9 @@ export default function Index() {
 
 	return (
 		<div className="min-h-screen text-white relative overflow-hidden">
-			{/* Exact Holographic Background Image */}
+			{/* Holographic Background */}
 			<div
-				className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-				style={{}}
+				className="absolute inset-0 bg-gradient-holographic"
 			/>
 
 			{/* Optional subtle overlay to enhance contrast if needed */}
