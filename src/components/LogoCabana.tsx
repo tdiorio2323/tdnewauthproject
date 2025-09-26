@@ -1,4 +1,4 @@
-import React, { useId, useId, useId, useId, useId, useId, useId, useId, useId, useId, useId, useId } from "react";
+import React from "react";
 
 export default function LogoCabana({ className = "" }: { className?: string }) {
 	return (
