@@ -18,7 +18,10 @@ export default function Index() {
 		<div className="min-h-screen text-white relative overflow-hidden">
 			{/* Holographic Background */}
 			<div
-				className="absolute inset-0 bg-gradient-holographic"
+				className="absolute inset-0"
+				style={{
+					background: 'linear-gradient(135deg, #7B68EE 0%, #4A9FBD 25%, #F5B942 50%, #C5E4B5 75%, #B19CD9 100%)'
+				}}
 			/>
 
 			{/* Optional subtle overlay to enhance contrast if needed */}
