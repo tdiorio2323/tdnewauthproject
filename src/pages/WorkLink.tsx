@@ -71,7 +71,7 @@ export default function WorkLink() {
 		}
 		setSaving(false);
 		toast({ title: "Saved", description: "Your page has been saved." });
-		window.open(`/${handle || ""}`, "_blank");
+		window.open(`/${handle}`, "_blank");
 	};
 
 	// Debounced autosave when enabled and supabase is configured
