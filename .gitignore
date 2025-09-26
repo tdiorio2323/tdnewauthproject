@@ -25,7 +25,6 @@ dist-ssr
 .env
 .vercel
 
-apsco-sports-enterprises
 node_modules/
 .pnpm/
 .next/
