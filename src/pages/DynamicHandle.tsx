@@ -13,7 +13,7 @@ interface CreatorPage {
   links: LinkItem[];
   choices: any;
   logo_path?: string;
-  status: 'pending' | 'approved' | 'rejected';
+  status: "pending" | "approved" | "rejected";
 }
 
 export default function DynamicHandle() {
@@ -36,17 +36,17 @@ export default function DynamicHandle() {
     if (!SUPABASE_ENABLED) {
       // Fallback for development - show demo page
       setCreator({
-        id: 'demo',
+        id: "demo",
         handle: handle!,
         title: `@${handle}`,
-        email: 'demo@example.com',
+        email: "demo@example.com",
         links: [
           { label: "Instagram", href: `https://instagram.com/${handle}`, icon: "instagram" },
           { label: "YouTube", href: "#", icon: "youtube" },
           { label: "Shop", href: "#", icon: "shop" },
         ],
-        choices: { background: 'palms', buttons: 'glass' },
-        status: 'approved'
+        choices: { background: "palms", buttons: "glass" },
+        status: "approved",
       });
       setLoading(false);
       return;
@@ -54,10 +54,10 @@ export default function DynamicHandle() {
 
     try {
       const { data, error } = await supabase
-        .from('signup_requests')
-        .select('*')
-        .eq('handle', handle)
-        .eq('status', 'approved')
+        .from("signup_requests")
+        .select("*")
+        .eq("handle", handle)
+        .eq("status", "approved")
         .single();
 
       if (error || !data) {
@@ -66,7 +66,7 @@ export default function DynamicHandle() {
         setCreator(data);
       }
     } catch (err) {
-      console.error('Error loading creator page:', err);
+      console.error("Error loading creator page:", err);
       setNotFound(true);
     } finally {
       setLoading(false);
@@ -86,8 +86,8 @@ export default function DynamicHandle() {
   }
 
   // Get logo URL if available
-  const logoUrl = creator.logo_path 
-    ? supabase.storage.from('intake').getPublicUrl(creator.logo_path).data.publicUrl
+  const logoUrl = creator.logo_path
+    ? supabase.storage.from("intake").getPublicUrl(creator.logo_path).data.publicUrl
     : null;
 
   return (
@@ -95,9 +95,9 @@ export default function DynamicHandle() {
       className="relative min-h-screen min-h-dvh text-white antialiased bg-[#0b0c0f]"
       style={{
         backgroundImage: "url(/uploads/cabana%20background.jpeg)",
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       <div className="pointer-events-none absolute inset-0 bg-black/40" aria-hidden />
@@ -110,35 +110,37 @@ export default function DynamicHandle() {
                 src={logoUrl}
                 alt={`${creator.handle} logo`}
                 className="object-cover rounded-full border-2 border-white/20"
-                style={{ width: 'clamp(72px, 18vw, 192px)', height: 'clamp(72px, 18vw, 192px)' }}
+                style={{ width: "clamp(72px, 18vw, 192px)", height: "clamp(72px, 18vw, 192px)" }}
               />
             ) : (
-              <div 
+              <div
                 className="rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-2xl font-bold"
-                style={{ width: 'clamp(72px, 18vw, 192px)', height: 'clamp(72px, 18vw, 192px)' }}
+                style={{ width: "clamp(72px, 18vw, 192px)", height: "clamp(72px, 18vw, 192px)" }}
               >
-                {creator.handle[0]?.toUpperCase() || '?'}
+                {creator.handle[0]?.toUpperCase() || "?"}
               </div>
             )}
           </div>
-          
+
           {/* Title/Handle */}
           <div className="mb-5 flex justify-center">
             <span className="text-sm md:text-base lg:text-lg font-bold tracking-wide">
               {creator.title || `@${creator.handle.toUpperCase()}`}
             </span>
           </div>
-          
+
           {/* Links */}
           <div className="mb-4 space-y-3">
-            {creator.links.filter(l => l.label && l.href).map((link, idx) => (
-              <LinkButton key={idx} item={link} />
-            ))}
+            {creator.links
+              .filter((l) => l.label && l.href)
+              .map((link, idx) => (
+                <LinkButton key={idx} item={link} />
+              ))}
           </div>
-          
+
           {/* VIP Module for visitors to join waitlist */}
           <VipModule />
-          
+
           {/* Footer */}
           <div className="mt-5 flex items-center justify-center gap-5 text-[11px] text-white/45">
             <span>Powered by CABANA</span>

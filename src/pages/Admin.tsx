@@ -10,18 +10,18 @@ const Admin = () => {
     // Check if user is authenticated and has admin role
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        navigate('/auth');
+        navigate("/auth");
         return;
       }
 
       supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
         .single()
         .then(({ data }) => {
-          if (!data || data.role !== 'admin') {
-            navigate('/shop');
+          if (!data || data.role !== "admin") {
+            navigate("/shop");
           }
         });
     });

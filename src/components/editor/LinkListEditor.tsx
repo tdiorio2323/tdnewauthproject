@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import type { LinkItem } from '@/types';
+import { useState } from "react";
+import type { LinkItem } from "@/types";
 
 interface Props {
   value: LinkItem[];
@@ -9,9 +9,11 @@ interface Props {
 export default function LinkListEditor({ value, onChange }: Props) {
   const [dragIndex, setDragIndex] = useState<number | null>(null);
 
-  const add = () => onChange([...value, { label: '', url: '', position: value.length }]);
-  const remove = (idx: number) => onChange(value.filter((_, i) => i !== idx).map((l, i) => ({ ...l, position: i })));
-  const update = (idx: number, patch: Partial<LinkItem>) => onChange(value.map((l, i) => i === idx ? { ...l, ...patch } : l));
+  const add = () => onChange([...value, { label: "", url: "", position: value.length }]);
+  const remove = (idx: number) =>
+    onChange(value.filter((_, i) => i !== idx).map((l, i) => ({ ...l, position: i })));
+  const update = (idx: number, patch: Partial<LinkItem>) =>
+    onChange(value.map((l, i) => (i === idx ? { ...l, ...patch } : l)));
 
   const onDragStart = (idx: number) => setDragIndex(idx);
   const onDragOver = (e: React.DragEvent<HTMLDivElement>) => e.preventDefault();
@@ -28,7 +30,9 @@ export default function LinkListEditor({ value, onChange }: Props) {
     <div className="border rounded-3xl p-6 space-y-4">
       <div className="flex items-center justify-between">
         <h3 className="text-lg font-light">Links</h3>
-        <button onClick={add} className="px-3 py-1 rounded-lg bg-white text-black text-sm">Add</button>
+        <button onClick={add} className="px-3 py-1 rounded-lg bg-white text-black text-sm">
+          Add
+        </button>
       </div>
       <div className="space-y-3">
         {value.map((l, idx) => (
@@ -56,7 +60,9 @@ export default function LinkListEditor({ value, onChange }: Props) {
             </div>
             <div className="mt-2 flex justify-between text-xs text-muted-foreground">
               <span>Drag to reorder</span>
-              <button onClick={() => remove(idx)} className="text-red-400">Remove</button>
+              <button onClick={() => remove(idx)} className="text-red-400">
+                Remove
+              </button>
             </div>
           </div>
         ))}
@@ -64,4 +70,3 @@ export default function LinkListEditor({ value, onChange }: Props) {
     </div>
   );
 }
-

@@ -1,5 +1,5 @@
-import { supabase } from '@/integrations/supabase/client';
-import { LinkItem, LinkPagePrefs } from '@/types';
+import { supabase } from "@/integrations/supabase/client";
+import { LinkItem, LinkPagePrefs } from "@/types";
 
 export interface Profile {
   id: string;
@@ -26,28 +26,24 @@ export async function getSessionUserId(): Promise<string | null> {
 }
 
 export async function ensureProfile(userId: string, updates?: Partial<Profile>): Promise<Profile> {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single();
-  if (error && error.code !== 'PGRST116') throw error;
+  const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
+  if (error && error.code !== "PGRST116") throw error;
   if (!data) {
     const insert: Partial<Profile> = { id: userId, ...updates };
     const { data: created, error: insertErr } = await supabase
-      .from('profiles')
+      .from("profiles")
       .insert(insert)
-      .select('*')
+      .select("*")
       .single();
     if (insertErr) throw insertErr;
     return created as Profile;
   }
   if (updates && Object.keys(updates).length) {
     const { data: updated, error: upErr } = await supabase
-      .from('profiles')
+      .from("profiles")
       .update(updates)
-      .eq('id', userId)
-      .select('*')
+      .eq("id", userId)
+      .select("*")
       .single();
     if (upErr) throw upErr;
     return updated as Profile;
@@ -55,35 +51,37 @@ export async function ensureProfile(userId: string, updates?: Partial<Profile>):
   return data as Profile;
 }
 
-export async function loadOrCreateLinkPage(userId: string): Promise<{ page: LinkPageRow; links: LinkItem[] }> {
+export async function loadOrCreateLinkPage(
+  userId: string,
+): Promise<{ page: LinkPageRow; links: LinkItem[] }> {
   // fetch existing page
   const { data: page, error } = await supabase
-    .from('link_pages')
-    .select('*')
-    .eq('user_id', userId)
+    .from("link_pages")
+    .select("*")
+    .eq("user_id", userId)
     .single();
   if (page) {
     const { data: links } = await supabase
-      .from('links')
-      .select('id,label,url,position')
-      .eq('page_id', page.id)
-      .order('position', { ascending: true });
+      .from("links")
+      .select("id,label,url,position")
+      .eq("page_id", page.id)
+      .order("position", { ascending: true });
     return { page: page as LinkPageRow, links: (links as LinkItem[]) || [] };
   }
   // create a new page with defaults
   const insert = {
     user_id: userId,
-    theme: 'gradient',
-    font: 'inter',
-    color_scheme: 'purple-teal',
-    button_style: 'rounded',
-    button_layout: 'stacked',
+    theme: "gradient",
+    font: "inter",
+    color_scheme: "purple-teal",
+    button_style: "rounded",
+    button_layout: "stacked",
     sections: {},
   };
   const { data: created, error: insErr } = await supabase
-    .from('link_pages')
+    .from("link_pages")
     .insert(insert)
-    .select('*')
+    .select("*")
     .single();
   if (insErr) throw insErr;
   return { page: created as LinkPageRow, links: [] };
@@ -92,11 +90,11 @@ export async function loadOrCreateLinkPage(userId: string): Promise<{ page: Link
 export async function saveLinkPage(
   userId: string,
   prefs: LinkPagePrefs,
-  links: LinkItem[]
+  links: LinkItem[],
 ): Promise<void> {
   // upsert page
   const { data: page } = await supabase
-    .from('link_pages')
+    .from("link_pages")
     .upsert(
       {
         user_id: userId,
@@ -108,39 +106,43 @@ export async function saveLinkPage(
         sections: prefs.sections,
         updated_at: new Date().toISOString(),
       },
-      { onConflict: 'user_id' }
+      { onConflict: "user_id" },
     )
-    .select('*')
+    .select("*")
     .single();
 
-  if (!page) throw new Error('Failed to upsert link page');
+  if (!page) throw new Error("Failed to upsert link page");
 
   // Replace links for this page
-  await supabase.from('links').delete().eq('page_id', page.id);
+  await supabase.from("links").delete().eq("page_id", page.id);
   if (links.length) {
-    const rows = links.map((l, idx) => ({ page_id: page.id, label: l.label, url: l.url, position: idx }));
-    const { error: insErr } = await supabase.from('links').insert(rows);
+    const rows = links.map((l, idx) => ({
+      page_id: page.id,
+      label: l.label,
+      url: l.url,
+      position: idx,
+    }));
+    const { error: insErr } = await supabase.from("links").insert(rows);
     if (insErr) throw insErr;
   }
 }
 
 export async function fetchPublicByHandle(handle: string) {
   const { data: profile } = await supabase
-    .from('profiles')
-    .select('id,handle,display_name,bio,avatar_url')
-    .eq('handle', handle)
+    .from("profiles")
+    .select("id,handle,display_name,bio,avatar_url")
+    .eq("handle", handle)
     .single();
   if (!profile) return null;
   const { data: page } = await supabase
-    .from('link_pages')
-    .select('*')
-    .eq('user_id', profile.id)
+    .from("link_pages")
+    .select("*")
+    .eq("user_id", profile.id)
     .single();
   const { data: links } = await supabase
-    .from('links')
-    .select('label,url,position')
-    .in('page_id', page ? [page.id] : [])
-    .order('position', { ascending: true });
+    .from("links")
+    .select("label,url,position")
+    .in("page_id", page ? [page.id] : [])
+    .order("position", { ascending: true });
   return { profile, page, links: links || [] };
 }
-

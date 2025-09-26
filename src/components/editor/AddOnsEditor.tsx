@@ -1,4 +1,4 @@
-import { useTheme } from '@/contexts/ThemeContext';
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function AddOnsEditor() {
   const { preferences, updatePreferences } = useTheme();
@@ -14,13 +14,17 @@ export default function AddOnsEditor() {
           <div>Image Box</div>
           <p className="text-xs text-muted-foreground">Show a featured image/card</p>
         </div>
-        <input type="checkbox" checked={s.imageBox} onChange={(e) => set({ imageBox: e.target.checked })} />
+        <input
+          type="checkbox"
+          checked={s.imageBox}
+          onChange={(e) => set({ imageBox: e.target.checked })}
+        />
       </label>
       {s.imageBox && (
         <input
           className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/20"
           placeholder="Image URL"
-          value={s.imageUrl || ''}
+          value={s.imageUrl || ""}
           onChange={(e) => set({ imageUrl: e.target.value })}
         />
       )}
@@ -30,13 +34,17 @@ export default function AddOnsEditor() {
           <div>Booking Form</div>
           <p className="text-xs text-muted-foreground">Collect requests via email</p>
         </div>
-        <input type="checkbox" checked={s.bookingForm} onChange={(e) => set({ bookingForm: e.target.checked })} />
+        <input
+          type="checkbox"
+          checked={s.bookingForm}
+          onChange={(e) => set({ bookingForm: e.target.checked })}
+        />
       </label>
       {s.bookingForm && (
         <input
           className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/20"
           placeholder="Booking email (mailto will be used)"
-          value={s.bookingEmail || ''}
+          value={s.bookingEmail || ""}
           onChange={(e) => set({ bookingEmail: e.target.value })}
         />
       )}
@@ -52,7 +60,7 @@ export default function AddOnsEditor() {
         <input
           className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/20"
           placeholder="Shop URL"
-          value={s.shopUrl || ''}
+          value={s.shopUrl || ""}
           onChange={(e) => set({ shopUrl: e.target.value })}
         />
       )}
@@ -62,17 +70,20 @@ export default function AddOnsEditor() {
           <div>Custom Text</div>
           <p className="text-xs text-muted-foreground">Small footer note</p>
         </div>
-        <input type="checkbox" checked={s.customText} onChange={(e) => set({ customText: e.target.checked })} />
+        <input
+          type="checkbox"
+          checked={s.customText}
+          onChange={(e) => set({ customText: e.target.checked })}
+        />
       </label>
       {s.customText && (
         <input
           className="w-full px-3 py-2 rounded-xl bg-white/5 border border-white/20"
           placeholder="Your message"
-          value={s.customTextContent || ''}
+          value={s.customTextContent || ""}
           onChange={(e) => set({ customTextContent: e.target.value })}
         />
       )}
     </div>
   );
 }
-

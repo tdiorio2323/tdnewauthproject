@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Minus, ShoppingCart, Star, Heart, Filter, Search, User, MapPin, Clock } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { supabase, SUPABASE_ENABLED } from '@/lib/supabase';
-import { toast } from 'sonner';
+import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Plus,
+  Minus,
+  ShoppingCart,
+  Star,
+  Heart,
+  Filter,
+  Search,
+  User,
+  MapPin,
+  Clock,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { supabase, SUPABASE_ENABLED } from "@/lib/supabase";
+import { toast } from "sonner";
 
 interface Product {
   id: string;
@@ -37,8 +54,8 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string>('all');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState<string>("all");
+  const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [cartTotal, setCartTotal] = useState(0);
 
@@ -47,7 +64,7 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
   }, []);
 
   useEffect(() => {
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     setCartTotal(total);
   }, [cart]);
 
@@ -55,9 +72,9 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
     try {
       if (SUPABASE_ENABLED) {
         const { data, error } = await supabase
-          .from('products')
-          .select('*')
-          .eq('is_available', true);
+          .from("products")
+          .select("*")
+          .eq("is_available", true);
 
         if (error) throw error;
         setProducts(data || []);
@@ -67,21 +84,19 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
         setProducts([]); // Return empty array or mock data
       }
     } catch (error) {
-      console.error('Error fetching products:', error);
-      toast.error('Failed to load products');
+      console.error("Error fetching products:", error);
+      toast.error("Failed to load products");
     } finally {
       setIsLoading(false);
     }
   };
 
   const addToCart = (product: Product) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === product.id);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === product.id);
       if (existingItem) {
-        return prevCart.map(item =>
-          item.id === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prevCart.map((item) =>
+          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item,
         );
       }
       return [...prevCart, { ...product, quantity: 1 }];
@@ -90,27 +105,26 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
   };
 
   const removeFromCart = (productId: string) => {
-    setCart(prevCart => {
-      const existingItem = prevCart.find(item => item.id === productId);
+    setCart((prevCart) => {
+      const existingItem = prevCart.find((item) => item.id === productId);
       if (existingItem && existingItem.quantity > 1) {
-        return prevCart.map(item =>
-          item.id === productId
-            ? { ...item, quantity: item.quantity - 1 }
-            : item
+        return prevCart.map((item) =>
+          item.id === productId ? { ...item, quantity: item.quantity - 1 } : item,
         );
       }
-      return prevCart.filter(item => item.id !== productId);
+      return prevCart.filter((item) => item.id !== productId);
     });
   };
 
-  const filteredProducts = products.filter(product => {
-    const matchesCategory = selectedCategory === 'all' || product.category === selectedCategory;
-    const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
+  const filteredProducts = products.filter((product) => {
+    const matchesCategory = selectedCategory === "all" || product.category === selectedCategory;
+    const matchesSearch =
+      product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
-  const categories = [...new Set(products.map(product => product.category))];
+  const categories = [...new Set(products.map((product) => product.category))];
 
   if (isLoading) {
     return (
@@ -124,39 +138,42 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
   }
 
   return (
-    <div className="min-h-screen bg-cover bg-center bg-no-repeat" style={{
-      backgroundImage: `url('/lovable-uploads/00a3ca73-c7b5-4caf-be11-2b1107efb913.png')`
-    }}>
+    <div
+      className="min-h-screen bg-cover bg-center bg-no-repeat"
+      style={{
+        backgroundImage: `url('/lovable-uploads/00a3ca73-c7b5-4caf-be11-2b1107efb913.png')`,
+      }}
+    >
       <div className="min-h-screen bg-black/60 backdrop-blur-sm">
         {/* Header */}
         <header className="bg-black/80 backdrop-blur-md border-b border-white/10 sticky top-0 z-50">
           <div className="container mx-auto px-4 py-4">
             {/* Top row with centered logo */}
             <div className="flex justify-center mb-4">
-              <img 
-                src="/lovable-uploads/677a8de4-c4a7-4591-9b1b-b0a474631de7.png" 
-                alt="TD Studios" 
+              <img
+                src="/lovable-uploads/677a8de4-c4a7-4591-9b1b-b0a474631de7.png"
+                alt="TD Studios"
                 className="h-10 w-auto"
               />
             </div>
-            
+
             {/* Bottom row with cart button */}
             <div className="flex items-center justify-center relative">
               <div className="absolute right-0 top-0">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="relative bg-white/10 border-white/20 text-white hover:bg-white/20"
                   onClick={() => {
                     if (cart.length > 0 && onCheckout) {
                       onCheckout(cart, cartTotal);
                     } else if (cart.length > 0) {
                       // Store cart data and navigate to checkout
-                      sessionStorage.setItem('cartItems', JSON.stringify(cart));
-                      sessionStorage.setItem('cartTotal', cartTotal.toString());
-                      navigate('/checkout');
+                      sessionStorage.setItem("cartItems", JSON.stringify(cart));
+                      sessionStorage.setItem("cartTotal", cartTotal.toString());
+                      navigate("/checkout");
                     } else {
-                      toast.info('Add items to cart first!');
+                      toast.info("Add items to cart first!");
                     }
                   }}
                 >
@@ -195,9 +212,9 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map(category => (
+                  {categories.map((category) => (
                     <SelectItem key={category} value={category}>
-                      {category.charAt(0).toUpperCase() + category.slice(1).replace('_', ' ')}
+                      {category.charAt(0).toUpperCase() + category.slice(1).replace("_", " ")}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -208,7 +225,10 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
           {/* Products Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300">
+              <Card
+                key={product.id}
+                className="bg-white/10 backdrop-blur-md border-white/20 hover:bg-white/15 transition-all duration-300"
+              >
                 <CardContent className="p-6">
                   <div className="aspect-square mb-4 bg-white/5 rounded-lg overflow-hidden">
                     {product.image_url ? (
@@ -228,43 +248,54 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
                       </div>
                     )}
                   </div>
-                  
+
                   <div className="space-y-3">
                     <div>
                       <h3 className="font-semibold text-white text-lg">{product.name}</h3>
                       <Badge variant="secondary" className="mt-1 bg-white/20 text-white/80">
-                        {product.category.charAt(0).toUpperCase() + product.category.slice(1).replace('_', ' ')}
+                        {product.category.charAt(0).toUpperCase() +
+                          product.category.slice(1).replace("_", " ")}
                       </Badge>
                     </div>
-                    
+
                     {product.description && (
                       <p className="text-white/70 text-sm line-clamp-2">{product.description}</p>
                     )}
-                    
+
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-2xl font-bold text-white">${(product.price / 100).toFixed(2)}</span>
+                        <span className="text-2xl font-bold text-white">
+                          ${(product.price / 100).toFixed(2)}
+                        </span>
                         {product.weight_grams && (
-                          <span className="text-white/60 text-sm ml-2">/ {product.weight_grams}g</span>
+                          <span className="text-white/60 text-sm ml-2">
+                            / {product.weight_grams}g
+                          </span>
                         )}
                       </div>
                     </div>
-                    
+
                     {(product.thc_percentage || product.cbd_percentage) && (
                       <div className="flex gap-2">
                         {product.thc_percentage && (
-                          <Badge variant="outline" className="border-red-400/50 text-red-300 bg-red-500/10">
+                          <Badge
+                            variant="outline"
+                            className="border-red-400/50 text-red-300 bg-red-500/10"
+                          >
                             THC: {product.thc_percentage}%
                           </Badge>
                         )}
                         {product.cbd_percentage && (
-                          <Badge variant="outline" className="border-green-400/50 text-green-300 bg-green-500/10">
+                          <Badge
+                            variant="outline"
+                            className="border-green-400/50 text-green-300 bg-green-500/10"
+                          >
                             CBD: {product.cbd_percentage}%
                           </Badge>
                         )}
                       </div>
                     )}
-                    
+
                     <div className="flex gap-2">
                       <Button
                         onClick={() => addToCart(product)}
@@ -300,36 +331,69 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
           <div className="container mx-auto px-4 py-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="space-y-4">
-                <img 
-                  src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png" 
-                  alt="TD Studios" 
+                <img
+                  src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png"
+                  alt="TD Studios"
                   className="h-24 w-auto"
                 />
                 <p className="text-white/60 text-sm">
-                  Premium cannabis delivery service bringing you the finest products right to your door.
+                  Premium cannabis delivery service bringing you the finest products right to your
+                  door.
                 </p>
               </div>
-              
+
               <div>
                 <h3 className="font-semibold text-white mb-4">Quick Links</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Designs</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Menus</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Marketing</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Contact</a></li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Designs
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Menus
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Marketing
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Contact
+                    </a>
+                  </li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-semibold text-white mb-4">Support</h3>
                 <ul className="space-y-2 text-sm">
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Help Center</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Track Order</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Returns</a></li>
-                  <li><a href="#" className="text-white/60 hover:text-white transition-colors">Contact Us</a></li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Help Center
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Track Order
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Returns
+                    </a>
+                  </li>
+                  <li>
+                    <a href="#" className="text-white/60 hover:text-white transition-colors">
+                      Contact Us
+                    </a>
+                  </li>
                 </ul>
               </div>
-              
+
               <div>
                 <h3 className="font-semibold text-white mb-4">FOLLOW @TDSTUDIOS.IO</h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -340,7 +404,7 @@ const CustomerApp = ({ onCheckout }: CustomerAppProps) => {
                 </div>
               </div>
             </div>
-            
+
             <div className="border-t border-white/10 mt-8 pt-8 text-center">
               <p className="text-white/60 text-sm">
                 © 2024 Cabana. All rights reserved. Please consume responsibly.

@@ -33,13 +33,13 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
     city: "",
     zipCode: "",
     phone: "",
-    notes: ""
+    notes: "",
   });
   const [paymentInfo, setPaymentInfo] = useState({
     cardNumber: "",
     expiryDate: "",
     cvv: "",
-    nameOnCard: ""
+    nameOnCard: "",
   });
 
   const deliveryFee = 499; // $4.99 in cents
@@ -60,9 +60,9 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
         onOrderComplete();
       } else {
         // Clear cart data and navigate to shop
-        sessionStorage.removeItem('cartItems');
-        sessionStorage.removeItem('cartTotal');
-        navigate('/shop');
+        sessionStorage.removeItem("cartItems");
+        sessionStorage.removeItem("cartTotal");
+        navigate("/shop");
       }
     }, 2000);
   };
@@ -74,20 +74,14 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
           <CardContent className="pt-6 space-y-4">
             <CheckCircle className="h-16 w-16 text-primary mx-auto" />
             <h2 className="text-2xl font-bold text-primary">Order Confirmed!</h2>
-            <p className="text-muted-foreground">
-              Your order will be delivered in 30-45 minutes
-            </p>
+            <p className="text-muted-foreground">Your order will be delivered in 30-45 minutes</p>
             <Badge variant="secondary" className="text-sm">
               Order #12345
             </Badge>
             <Button onClick={onOrderComplete} className="w-full mt-4">
               Track Order
             </Button>
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/shop')} 
-              className="w-full mt-2"
-            >
+            <Button variant="outline" onClick={() => navigate("/shop")} className="w-full mt-2">
               Continue Shopping
             </Button>
           </CardContent>
@@ -106,37 +100,41 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
               <ArrowLeft className="h-5 w-5" />
             </Button>
           ) : (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => navigate('/shop')}
-            >
+            <Button variant="ghost" size="icon" onClick={() => navigate("/shop")}>
               <ArrowLeft className="h-5 w-5" />
             </Button>
           )}
           <h1 className="text-xl font-semibold">Checkout</h1>
         </div>
-        
+
         {/* Brand Logo */}
         <div className="flex justify-center mt-4 mb-6">
-          <img 
-            src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png" 
-            alt="Brand Logo" 
+          <img
+            src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png"
+            alt="Brand Logo"
             className="h-36 w-auto"
           />
         </div>
-        
+
         {/* Progress indicator */}
         <div className="flex items-center justify-center space-x-4">
-          <div className={`flex items-center space-x-2 ${step >= 1 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 1 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+          <div
+            className={`flex items-center space-x-2 ${step >= 1 ? "text-primary" : "text-muted-foreground"}`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 1 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+            >
               1
             </div>
             <span className="text-sm">Delivery</span>
           </div>
-          <div className={`w-8 h-0.5 ${step >= 2 ? 'bg-primary' : 'bg-muted'}`} />
-          <div className={`flex items-center space-x-2 ${step >= 2 ? 'text-primary' : 'text-muted-foreground'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 2 ? 'bg-primary text-primary-foreground' : 'bg-muted'}`}>
+          <div className={`w-8 h-0.5 ${step >= 2 ? "bg-primary" : "bg-muted"}`} />
+          <div
+            className={`flex items-center space-x-2 ${step >= 2 ? "text-primary" : "text-muted-foreground"}`}
+          >
+            <div
+              className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium ${step >= 2 ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+            >
               2
             </div>
             <span className="text-sm">Payment</span>
@@ -148,9 +146,9 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
         {/* Brand Logo */}
         <Card>
           <CardContent className="py-16 flex justify-center items-center">
-            <img 
-              src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png" 
-              alt="Cabana" 
+            <img
+              src="/lovable-uploads/bff2ab24-8836-4dfa-836d-bff37b607cfa.png"
+              alt="Cabana"
               className="h-full w-full object-contain max-h-20"
             />
           </CardContent>
@@ -167,7 +165,11 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 rounded-lg bg-muted flex items-center justify-center overflow-hidden">
                     {item.image_url ? (
-                      <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-full h-full object-cover"
+                      />
                     ) : (
                       <div className="text-xs text-muted-foreground">{item.category}</div>
                     )}
@@ -192,9 +194,9 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                 </div>
               </div>
             ))}
-            
+
             <Separator />
-            
+
             <div className="space-y-2 text-sm">
               <div className="flex justify-between">
                 <span>Subtotal</span>
@@ -234,11 +236,11 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                     id="address"
                     placeholder="Enter your address"
                     value={deliveryInfo.address}
-                    onChange={(e) => setDeliveryInfo({...deliveryInfo, address: e.target.value})}
+                    onChange={(e) => setDeliveryInfo({ ...deliveryInfo, address: e.target.value })}
                     required
                   />
                 </div>
-                
+
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="city">City</Label>
@@ -246,7 +248,7 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                       id="city"
                       placeholder="City"
                       value={deliveryInfo.city}
-                      onChange={(e) => setDeliveryInfo({...deliveryInfo, city: e.target.value})}
+                      onChange={(e) => setDeliveryInfo({ ...deliveryInfo, city: e.target.value })}
                       required
                     />
                   </div>
@@ -256,7 +258,9 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                       id="zipCode"
                       placeholder="ZIP"
                       value={deliveryInfo.zipCode}
-                      onChange={(e) => setDeliveryInfo({...deliveryInfo, zipCode: e.target.value})}
+                      onChange={(e) =>
+                        setDeliveryInfo({ ...deliveryInfo, zipCode: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -269,7 +273,7 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                     type="tel"
                     placeholder="(555) 123-4567"
                     value={deliveryInfo.phone}
-                    onChange={(e) => setDeliveryInfo({...deliveryInfo, phone: e.target.value})}
+                    onChange={(e) => setDeliveryInfo({ ...deliveryInfo, phone: e.target.value })}
                     required
                   />
                 </div>
@@ -280,7 +284,7 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                     id="notes"
                     placeholder="e.g., Leave at door, Ring doorbell"
                     value={deliveryInfo.notes}
-                    onChange={(e) => setDeliveryInfo({...deliveryInfo, notes: e.target.value})}
+                    onChange={(e) => setDeliveryInfo({ ...deliveryInfo, notes: e.target.value })}
                   />
                 </div>
 
@@ -316,7 +320,7 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                     id="cardNumber"
                     placeholder="1234 5678 9012 3456"
                     value={paymentInfo.cardNumber}
-                    onChange={(e) => setPaymentInfo({...paymentInfo, cardNumber: e.target.value})}
+                    onChange={(e) => setPaymentInfo({ ...paymentInfo, cardNumber: e.target.value })}
                     required
                   />
                 </div>
@@ -328,7 +332,9 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                       id="expiryDate"
                       placeholder="MM/YY"
                       value={paymentInfo.expiryDate}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, expiryDate: e.target.value})}
+                      onChange={(e) =>
+                        setPaymentInfo({ ...paymentInfo, expiryDate: e.target.value })
+                      }
                       required
                     />
                   </div>
@@ -338,7 +344,7 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                       id="cvv"
                       placeholder="123"
                       value={paymentInfo.cvv}
-                      onChange={(e) => setPaymentInfo({...paymentInfo, cvv: e.target.value})}
+                      onChange={(e) => setPaymentInfo({ ...paymentInfo, cvv: e.target.value })}
                       required
                     />
                   </div>
@@ -350,14 +356,16 @@ export const CheckoutFlow = ({ cartItems, total, onBack, onOrderComplete }: Chec
                     id="nameOnCard"
                     placeholder="John Doe"
                     value={paymentInfo.nameOnCard}
-                    onChange={(e) => setPaymentInfo({...paymentInfo, nameOnCard: e.target.value})}
+                    onChange={(e) => setPaymentInfo({ ...paymentInfo, nameOnCard: e.target.value })}
                     required
                   />
                 </div>
 
                 <div className="bg-primary/10 p-4 rounded-lg">
                   <p className="text-sm font-medium text-primary">Secure Payment</p>
-                  <p className="text-sm text-muted-foreground">Your payment information is encrypted and secure.</p>
+                  <p className="text-sm text-muted-foreground">
+                    Your payment information is encrypted and secure.
+                  </p>
                 </div>
 
                 <Button type="submit" className="w-full">

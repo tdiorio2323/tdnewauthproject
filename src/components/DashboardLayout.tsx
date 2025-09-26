@@ -2,47 +2,47 @@ import { useState } from "react";
 import { NavLink, Outlet } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { 
-  Home, 
-  Users, 
-  Package, 
-  ShoppingCart, 
-  Settings, 
+import {
+  Home,
+  Users,
+  Package,
+  ShoppingCart,
+  Settings,
   BarChart3,
   Menu,
   X,
-  Leaf
+  Leaf,
 } from "lucide-react";
 
 interface DashboardLayoutProps {
-  userRole?: 'super_admin' | 'brand_owner' | 'customer';
+  userRole?: "super_admin" | "brand_owner" | "customer";
 }
 
-export function DashboardLayout({ userRole = 'super_admin' }: DashboardLayoutProps) {
+export function DashboardLayout({ userRole = "super_admin" }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const navigation = {
     super_admin: [
-      { name: 'Dashboard', href: '/admin', icon: Home },
-      { name: 'Cannabis Brands', href: '/admin/brands', icon: Leaf },
-      { name: 'Subscriptions', href: '/admin/subscriptions', icon: BarChart3 },
-      { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-      { name: 'Settings', href: '/admin/settings', icon: Settings },
+      { name: "Dashboard", href: "/admin", icon: Home },
+      { name: "Cannabis Brands", href: "/admin/brands", icon: Leaf },
+      { name: "Subscriptions", href: "/admin/subscriptions", icon: BarChart3 },
+      { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+      { name: "Settings", href: "/admin/settings", icon: Settings },
     ],
     brand_owner: [
-      { name: 'Dashboard', href: '/brand', icon: Home },
-      { name: 'Products', href: '/brand/products', icon: Package },
-      { name: 'Orders', href: '/brand/orders', icon: ShoppingCart },
-      { name: 'Customers', href: '/brand/customers', icon: Users },
-      { name: 'Analytics', href: '/brand/analytics', icon: BarChart3 },
-      { name: 'Settings', href: '/brand/settings', icon: Settings },
+      { name: "Dashboard", href: "/brand", icon: Home },
+      { name: "Products", href: "/brand/products", icon: Package },
+      { name: "Orders", href: "/brand/orders", icon: ShoppingCart },
+      { name: "Customers", href: "/brand/customers", icon: Users },
+      { name: "Analytics", href: "/brand/analytics", icon: BarChart3 },
+      { name: "Settings", href: "/brand/settings", icon: Settings },
     ],
     customer: [
-      { name: 'Browse', href: '/shop', icon: Home },
-      { name: 'Cart', href: '/cart', icon: ShoppingCart },
-      { name: 'Orders', href: '/orders', icon: Package },
-      { name: 'Profile', href: '/profile', icon: Users },
-    ]
+      { name: "Browse", href: "/shop", icon: Home },
+      { name: "Cart", href: "/cart", icon: ShoppingCart },
+      { name: "Orders", href: "/orders", icon: Package },
+      { name: "Profile", href: "/profile", icon: Users },
+    ],
   };
 
   const currentNav = navigation[userRole];
@@ -63,17 +63,19 @@ export function DashboardLayout({ userRole = 'super_admin' }: DashboardLayoutPro
 
       {/* Sidebar overlay for mobile */}
       {sidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
       {/* Sidebar */}
-      <div className={cn(
-        "fixed top-0 left-0 z-40 h-full w-64 bg-gradient-hero border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0",
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
+      <div
+        className={cn(
+          "fixed top-0 left-0 z-40 h-full w-64 bg-gradient-hero border-r border-border transform transition-transform duration-300 ease-in-out lg:translate-x-0",
+          sidebarOpen ? "translate-x-0" : "-translate-x-full",
+        )}
+      >
         <div className="flex flex-col h-full">
           {/* Logo/Brand */}
           <div className="p-6 border-b border-border/50">
@@ -83,12 +85,18 @@ export function DashboardLayout({ userRole = 'super_admin' }: DashboardLayoutPro
               </div>
               <div>
                 <h1 className="text-lg font-bold text-primary-foreground">
-                  {userRole === 'super_admin' ? 'Admin Portal' : 
-                   userRole === 'brand_owner' ? 'Brand Portal' : 'Cannabis Hub'}
+                  {userRole === "super_admin"
+                    ? "Admin Portal"
+                    : userRole === "brand_owner"
+                      ? "Brand Portal"
+                      : "Cannabis Hub"}
                 </h1>
                 <p className="text-sm text-primary-foreground/70">
-                  {userRole === 'super_admin' ? 'Platform Management' : 
-                   userRole === 'brand_owner' ? 'Manage Your Store' : 'Order Cannabis'}
+                  {userRole === "super_admin"
+                    ? "Platform Management"
+                    : userRole === "brand_owner"
+                      ? "Manage Your Store"
+                      : "Order Cannabis"}
                 </p>
               </div>
             </div>
@@ -100,12 +108,14 @@ export function DashboardLayout({ userRole = 'super_admin' }: DashboardLayoutPro
               <NavLink
                 key={item.name}
                 to={item.href}
-                className={({ isActive }) => cn(
-                  "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
-                  isActive 
-                    ? "bg-primary text-primary-foreground shadow-green" 
-                    : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground"
-                )}
+                className={({ isActive }) =>
+                  cn(
+                    "flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-all duration-200",
+                    isActive
+                      ? "bg-primary text-primary-foreground shadow-green"
+                      : "text-primary-foreground/80 hover:bg-primary-foreground/10 hover:text-primary-foreground",
+                  )
+                }
                 onClick={() => setSidebarOpen(false)}
               >
                 <item.icon className="h-5 w-5" />

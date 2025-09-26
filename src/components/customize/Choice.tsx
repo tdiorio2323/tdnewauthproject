@@ -9,14 +9,7 @@ interface ChoiceProps {
   className?: string;
 }
 
-export function Choice({
-  active,
-  onClick,
-  label,
-  hint,
-  preview,
-  className,
-}: ChoiceProps) {
+export function Choice({ active, onClick, label, hint, preview, className }: ChoiceProps) {
   return (
     <button
       onClick={onClick}
@@ -26,7 +19,7 @@ export function Choice({
         "before:absolute before:inset-0 before:rounded-lg before:bg-gradient-to-br before:from-white/10 before:via-white/5 before:to-transparent before:opacity-0 before:transition-opacity before:duration-200",
         "hover:before:opacity-100 relative overflow-hidden",
         active && "border-primary/60 ring-2 ring-primary/40 bg-white/30",
-        className
+        className,
       )}
     >
       <div className="flex items-center justify-between gap-3 relative z-10">

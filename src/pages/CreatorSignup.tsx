@@ -1,49 +1,48 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
 
 export default function CreatorSignup() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    handle: '',
-    title: '',
-    bio: '',
+    email: "",
+    handle: "",
+    title: "",
+    bio: "",
   });
-  const [status, setStatus] = useState('idle'); // idle, submitting, success, error
+  const [status, setStatus] = useState("idle"); // idle, submitting, success, error
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setStatus('submitting');
+    setStatus("submitting");
 
     try {
       // For now, use demo mode until database is set up
-      console.log('Demo mode - Creator signup:', formData);
-      
+      console.log("Demo mode - Creator signup:", formData);
+
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      setStatus('success');
-      
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      setStatus("success");
+
       // After success, redirect to customization page
       setTimeout(() => {
         navigate(`/customize/${formData.handle}`);
       }, 2000);
-      
     } catch (error) {
-      console.error('Creator signup error:', error);
-      setStatus('error');
+      console.error("Creator signup error:", error);
+      setStatus("error");
     }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     }));
   };
 
-  if (status === 'success') {
+  if (status === "success") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-black to-zinc-900 text-white flex items-center justify-center px-6">
         <div className="text-center space-y-6">
@@ -65,16 +64,15 @@ export default function CreatorSignup() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-zinc-950 via-black to-zinc-900 text-white px-6 py-12">
       <div className="max-w-md mx-auto">
-        
         {/* Header */}
         <div className="text-center space-y-6 mb-12">
-          <button 
-            onClick={() => navigate('/')} 
+          <button
+            onClick={() => navigate("/")}
             className="text-zinc-400 hover:text-white transition-colors"
           >
             ← Back
           </button>
-          
+
           <div className="space-y-4">
             <h1 className="text-3xl font-light">Claim Your Page</h1>
             <div className="w-16 h-px bg-gradient-to-r from-brand-purple to-brand-teal mx-auto" />
@@ -85,7 +83,6 @@ export default function CreatorSignup() {
         {/* Form */}
         <div className="bg-zinc-900/30 backdrop-blur-xl border border-zinc-800/50 rounded-3xl p-8 space-y-8">
           <form onSubmit={handleSubmit} className="space-y-6">
-            
             <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-zinc-300 mb-2">
@@ -105,9 +102,7 @@ export default function CreatorSignup() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
-                  Handle *
-                </label>
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Handle *</label>
                 <div className="flex">
                   <span className="inline-flex items-center px-4 py-4 rounded-l-2xl bg-zinc-800/50 border border-r-0 border-zinc-700/50 text-zinc-400 text-sm">
                     cabana.com/
@@ -130,9 +125,7 @@ export default function CreatorSignup() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
-                  Display Name
-                </label>
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Display Name</label>
                 <input
                   type="text"
                   name="title"
@@ -146,9 +139,7 @@ export default function CreatorSignup() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-zinc-300 mb-2">
-                  Bio
-                </label>
+                <label className="block text-sm font-medium text-zinc-300 mb-2">Bio</label>
                 <textarea
                   name="bio"
                   rows={3}
@@ -164,16 +155,16 @@ export default function CreatorSignup() {
 
             <button
               type="submit"
-              disabled={status === 'submitting' || !formData.email || !formData.handle}
+              disabled={status === "submitting" || !formData.email || !formData.handle}
               className="w-full py-4 px-6 rounded-2xl bg-white text-black font-medium 
                          hover:bg-zinc-100 transition-all duration-300
                          transform hover:scale-[1.02] active:scale-[0.98]
                          disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             >
-              {status === 'submitting' ? 'Creating...' : 'Create My Page'}
+              {status === "submitting" ? "Creating..." : "Create My Page"}
             </button>
 
-            {status === 'error' && (
+            {status === "error" && (
               <div className="text-center p-4 rounded-2xl bg-red-500/10 border border-red-500/20">
                 <p className="text-red-400 text-sm">Something went wrong. Please try again.</p>
               </div>

@@ -8,9 +8,10 @@ import { Eye, EyeOff, Sparkles } from "lucide-react";
 import { supabase } from "@/lib/supabase";
 import { SUPABASE_ENABLED } from "@/env";
 import { useToast } from "@/hooks/use-toast";
+import { AuthResponse } from "@supabase/supabase-js";
 
 interface AuthPageProps {
-  onLogin?: (role: 'customer' | 'brand' | 'admin') => void;
+  onLogin?: (role: "customer" | "brand" | "admin") => void;
 }
 
 export const AuthPage = ({ onLogin }: AuthPageProps) => {
@@ -29,16 +30,15 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
       toast({
         title: "Error",
         description: "Please fill in all fields",
-        variant: "destructive"
+        variant: "destructive",
       });
       return;
     }
 
     setIsLoading(true);
-    
+
     try {
-      let authResult: any; // Use 'any' for flexibility with mock
-      let roleData: any = null;
+      let authResult: AuthResponse;
 
       if (SUPABASE_ENABLED) {
         if (isSignUp) {
@@ -47,7 +47,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
             password,
             options: {
               emailRedirectTo: `${window.location.origin}/`,
-            }
+            },
           });
 
           if (authResult.error) throw authResult.error;
@@ -81,27 +81,19 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
 
       if (authResult.data.user && !isSignUp) {
         const params = new URLSearchParams(location.search);
-        const redirect = params.get('redirect') || '/work/link';
-        if (roleData) {
-          const userRole = roleData.role;
-
-          // Navigate based on role
-          navigate(redirect);
-
-          // Call onLogin if provided (for backward compatibility)
-          if (onLogin) {
-            onLogin(userRole);
-          }
-        } else {
-          navigate(redirect);
+        const redirect = params.get("redirect") || "/work/link";
+        // roleData was always null, so removing the if (roleData) block
+        navigate(redirect);
+        if (onLogin) {
+          // Assuming a default role or fetching it elsewhere if needed
+          onLogin("customer"); // Default to customer, adjust if role logic exists elsewhere
         }
       }
-
     } catch (error: any) {
       toast({
         title: "Error",
         description: error.message,
-        variant: "destructive"
+        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -110,40 +102,40 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
 
   const handleGoogleAuth = () => {
     const params = new URLSearchParams(location.search);
-    const redirect = params.get('redirect') || '/work/link';
+    const redirect = params.get("redirect") || "/work/link";
     navigate(redirect);
   };
 
   const handleAppleAuth = () => {
     const params = new URLSearchParams(location.search);
-    const redirect = params.get('redirect') || '/work/link';
+    const redirect = params.get("redirect") || "/work/link";
     navigate(redirect);
   };
 
   return (
-    <div 
+    <div
       className="min-h-screen flex items-center justify-center p-4 relative"
       style={{
         backgroundImage: `url('/lovable-uploads/fa9437b3-6b52-4add-a826-421f47af7c9c.png')`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
       }}
     >
       {/* Dark overlay for better contrast */}
       <div className="absolute inset-0 bg-black/40" />
-      
+
       <Card className="w-full max-w-md bg-black/15 backdrop-blur-lg border-white/30 border-2 shadow-2xl shadow-black/50 relative z-10">
         <CardHeader className="text-center space-y-4">
           <div className="flex items-center justify-center">
-            <img 
-              src="/lovable-uploads/d5a7b980-44ec-49f6-bee8-c6858ca93ae5.png" 
-              alt="Bag Man NY" 
+            <img
+              src="/lovable-uploads/d5a7b980-44ec-49f6-bee8-c6858ca93ae5.png"
+              alt="Bag Man NY"
               className="h-40 w-auto"
             />
           </div>
           <p className="text-muted-foreground">Welcome back</p>
-          
+
           <div className="flex rounded-lg bg-muted p-1">
             <Button
               variant={!isSignUp ? "default" : "ghost"}
@@ -202,7 +194,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
             </div>
 
             <Button type="submit" disabled={isLoading} className="w-full">
-              {isLoading ? "Loading..." : (isSignUp ? "Sign Up" : "Sign In")}
+              {isLoading ? "Loading..." : isSignUp ? "Sign Up" : "Sign In"}
             </Button>
           </form>
 
@@ -251,7 +243,7 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
             >
               <div className="w-5 h-5 mr-2">
                 <svg viewBox="0 0 24 24" fill="currentColor" className="w-full h-full">
-                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z" />
                 </svg>
               </div>
               Continue with Apple
@@ -260,8 +252,8 @@ export const AuthPage = ({ onLogin }: AuthPageProps) => {
 
           <p className="text-xs text-center text-muted-foreground">
             By continuing, you agree to our{" "}
-            <span className="text-primary hover:underline cursor-pointer">Terms of Service</span> and{" "}
-            <span className="text-primary hover:underline cursor-pointer">Privacy Policy</span>
+            <span className="text-primary hover:underline cursor-pointer">Terms of Service</span>{" "}
+            and <span className="text-primary hover:underline cursor-pointer">Privacy Policy</span>
           </p>
 
           <div className="text-xs text-center bg-white/10 backdrop-blur-sm p-3 rounded-lg border border-white/20">

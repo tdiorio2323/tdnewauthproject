@@ -1,51 +1,55 @@
-import { useMemo, useState } from 'react'
-import GlassMasterCard from '@/components/GlassMasterCard'
-import { frostedButtonStyle, frostedInputStyle } from '@/lib/frosted'
-import { supabase } from '@/integrations/supabase/client'
+import { useMemo, useState } from "react";
+import GlassMasterCard from "@/components/GlassMasterCard";
+import { frostedButtonStyle, frostedInputStyle } from "@/lib/frosted";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
-type LinkRow = { label: string; url: string }
+type LinkRow = { label: string; url: string };
 
 export default function WaitlistStyled() {
-  const [email, setEmail] = useState('')
-  const [handle, setHandle] = useState('')
-  const [title, setTitle] = useState('')
-  const [logo, setLogo] = useState<File | null>(null)
-  const [links, setLinks] = useState<LinkRow[]>([{ label: '', url: '' }])
-  const [notes, setNotes] = useState('')
-  const [prefs, setPrefs] = useState({ stripe: true, emailBtn: true })
-  const [loading, setLoading] = useState(false)
-  const [done, setDone] = useState(false)
-  const [err, setErr] = useState<string | null>(null)
-  const [claimUrl, setClaimUrl] = useState<string | null>(null)
+  const [email, setEmail] = useState("");
+  const [handle, setHandle] = useState("");
+  const [title, setTitle] = useState("");
+  const [logo, setLogo] = useState<File | null>(null);
+  const [links, setLinks] = useState<LinkRow[]>([{ label: "", url: "" }]);
+  const [notes, setNotes] = useState("");
+  const [prefs, setPrefs] = useState({ stripe: true, emailBtn: true });
+  const [loading, setLoading] = useState(false);
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const [claimUrl, setClaimUrl] = useState<string | null>(null);
   const { toast } = useToast();
 
-  const emailValid = useMemo(() => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email), [email])
-  const handleClean = (v: string) => v.replace(/[^a-z0-9._-]/gi, '').toLowerCase()
+  const emailValid = useMemo(() => /[^\s@]+@[^\s@]+\.[^\s@]+/.test(email), [email]);
+  const handleClean = (v: string) => v.replace(/[^a-z0-9._-]/gi, "").toLowerCase();
 
   function addLink() {
-    setLinks((a) => [...a, { label: '', url: '' }])
+    setLinks((a) => [...a, { label: "", url: "" }]);
   }
 
   async function sha256(s: string) {
-    const buf = new TextEncoder().encode(s)
-    const digest = await crypto.subtle.digest('SHA-256', buf)
-    return Array.from(new Uint8Array(digest)).map((b) => b.toString(16).padStart(2, '0')).join('')
+    const buf = new TextEncoder().encode(s);
+    const digest = await crypto.subtle.digest("SHA-256", buf);
+    return Array.from(new Uint8Array(digest))
+      .map((b) => b.toString(16).padStart(2, "0"))
+      .join("");
   }
 
   async function submit() {
-    setLoading(true)
-    setErr(null)
+    setLoading(true);
+    setErr(null);
     try {
-      const token = crypto.randomUUID()
-      const tokenHash = await sha256(token)
+      const token = crypto.randomUUID();
+      const tokenHash = await sha256(token);
 
-      let logo_path: string | null = null
+      let logo_path: string | null = null;
       if (logo) {
-        const key = `intake/${crypto.randomUUID()}-${logo.name.replace(/\s+/g, '_')}`
-        const { error: upErr } = await supabase.storage.from('intake').upload(key, logo, { upsert: false })
-        if (upErr) throw upErr
-        logo_path = key
+        const key = `intake/${crypto.randomUUID()}-${logo.name.replace(/\s+/g, "_")}`;
+        const { error: upErr } = await supabase.storage
+          .from("intake")
+          .upload(key, logo, { upsert: false });
+        if (upErr) throw upErr;
+        logo_path = key;
       }
 
       const payload = {
@@ -57,19 +61,19 @@ export default function WaitlistStyled() {
         choices: { stripe: prefs.stripe, emailBtn: prefs.emailBtn },
         logo_path,
         claim_token_hash: tokenHash,
-        status: 'pending' as const,
-      }
+        status: "pending" as const,
+      };
 
-      const { error } = await supabase.from('signup_requests').insert([payload])
-      if (error) throw error
+      const { error } = await supabase.from("signup_requests").insert([payload]);
+      if (error) throw error;
 
-      const url = `${location.origin}/claim?t=${encodeURIComponent(token)}`
-      setClaimUrl(url)
-      setDone(true)
+      const url = `${location.origin}/claim?t=${encodeURIComponent(token)}`;
+      setClaimUrl(url);
+      setDone(true);
     } catch (e: Error) {
-      setErr(e?.message || 'Submission failed. Please try again.')
+      setErr(e?.message || "Submission failed. Please try again.");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
 
@@ -81,17 +85,34 @@ export default function WaitlistStyled() {
           <div className="mb-6 flex flex-col items-center text-center">
             <div className="h-24 w-24 overflow-hidden rounded-full border border-white/20 bg-white/10">
               {logo ? (
-                <img src={URL.createObjectURL(logo)} alt="Logo preview" className="h-full w-full object-cover" />
+                <img
+                  src={URL.createObjectURL(logo)}
+                  alt="Logo preview"
+                  className="h-full w-full object-cover"
+                />
               ) : (
                 <div className="grid h-full w-full place-items-center text-white/30">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-10 w-10"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    strokeWidth={1}
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
                   </svg>
                 </div>
               )}
             </div>
             <div className="mt-4 flex h-16 flex-col justify-center">
-              {title && <h2 className="text-xl md:text-2xl font-semibold tracking-tight">{title}</h2>}
+              {title && (
+                <h2 className="text-xl md:text-2xl font-semibold tracking-tight">{title}</h2>
+              )}
               {handle && <p className="text-xs md:text-sm text-white/60">@{handleClean(handle)}</p>}
             </div>
           </div>
@@ -99,16 +120,21 @@ export default function WaitlistStyled() {
           <div className="space-y-5">
             {/* Logo */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/70">Logo / Picture</label>
-              <label className="inline-flex cursor-pointer items-center rounded-lg px-4 py-2 text-sm text-white/80 transition-colors hover:text-white" style={frostedButtonStyle()}>
+              <label className="mb-1.5 block text-xs font-medium text-white/70">
+                Logo / Picture
+              </label>
+              <label
+                className="inline-flex cursor-pointer items-center rounded-lg px-4 py-2 text-sm text-white/80 transition-colors hover:text-white"
+                style={frostedButtonStyle()}
+              >
                 Choose File
                 <input
                   type="file"
                   accept="image/*"
                   className="hidden"
                   onChange={(e) => {
-                    const f = e.target.files?.[0]
-                    if (f) setLogo(f)
+                    const f = e.target.files?.[0];
+                    if (f) setLogo(f);
                   }}
                 />
               </label>
@@ -131,7 +157,9 @@ export default function WaitlistStyled() {
               <div>
                 <label className="mb-1.5 block text-xs font-medium text-white/70">Handle*</label>
                 <div className="relative">
-                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50">@</span>
+                  <span className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-white/50">
+                    @
+                  </span>
                   <input
                     value={handle}
                     onChange={(e) => setHandle(e.target.value)}
@@ -163,28 +191,42 @@ export default function WaitlistStyled() {
                     <input
                       placeholder="Label (Instagram, Shop…)"
                       value={link.label}
-                      onChange={(e) => setLinks((arr) => arr.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)))}
+                      onChange={(e) =>
+                        setLinks((arr) =>
+                          arr.map((x, j) => (j === i ? { ...x, label: e.target.value } : x)),
+                        )
+                      }
                       className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30"
                       style={frostedInputStyle()}
                     />
                     <input
                       placeholder="https://…"
                       value={link.url}
-                      onChange={(e) => setLinks((arr) => arr.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)))}
+                      onChange={(e) =>
+                        setLinks((arr) =>
+                          arr.map((x, j) => (j === i ? { ...x, url: e.target.value } : x)),
+                        )
+                      }
                       className="w-full rounded-xl px-4 py-3 text-sm text-white placeholder-white/40 outline-none focus:ring-2 focus:ring-white/30"
                       style={frostedInputStyle()}
                     />
                   </div>
                 ))}
               </div>
-              <button type="button" onClick={addLink} className="mt-3 text-sm text-white/70 underline-offset-2 hover:text-white hover:underline">
+              <button
+                type="button"
+                onClick={addLink}
+                className="mt-3 text-sm text-white/70 underline-offset-2 hover:text-white hover:underline"
+              >
                 + Add another link
               </button>
             </div>
 
             {/* Notes */}
             <div>
-              <label className="mb-1.5 block text-xs font-medium text-white/70">Notes / preferences</label>
+              <label className="mb-1.5 block text-xs font-medium text-white/70">
+                Notes / preferences
+              </label>
               <textarea
                 rows={4}
                 value={notes}
@@ -197,11 +239,19 @@ export default function WaitlistStyled() {
             {/* Prefs */}
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <label className="inline-flex items-center gap-2 text-sm text-white/80">
-                <input type="checkbox" checked={prefs.stripe} onChange={(e) => setPrefs({ ...prefs, stripe: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={prefs.stripe}
+                  onChange={(e) => setPrefs({ ...prefs, stripe: e.target.checked })}
+                />
                 Enable Stripe payments
               </label>
               <label className="inline-flex items-center gap-2 text-sm text-white/80">
-                <input type="checkbox" checked={prefs.emailBtn} onChange={(e) => setPrefs({ ...prefs, emailBtn: e.target.checked })} />
+                <input
+                  type="checkbox"
+                  checked={prefs.emailBtn}
+                  onChange={(e) => setPrefs({ ...prefs, emailBtn: e.target.checked })}
+                />
                 Show email button
               </label>
             </div>
@@ -216,7 +266,7 @@ export default function WaitlistStyled() {
               className="h-12 w-full rounded-full text-sm font-medium disabled:cursor-not-allowed disabled:opacity-50"
               style={frostedButtonStyle()}
             >
-              {loading ? 'Reserving…' : 'Reserve & Get Early Access'}
+              {loading ? "Reserving…" : "Reserve & Get Early Access"}
             </button>
           </div>
 
@@ -228,12 +278,14 @@ export default function WaitlistStyled() {
                 <button
                   type="button"
                   onClick={async () => {
-                    if (!claimUrl) return
-                    try { await navigator.clipboard.writeText(claimUrl) } catch (error: Error) {
+                    if (!claimUrl) return;
+                    try {
+                      await navigator.clipboard.writeText(claimUrl);
+                    } catch (error: Error) {
                       toast({
                         title: "Error",
                         description: error.message,
-                        variant: "destructive"
+                        variant: "destructive",
                       });
                     }
                   }}
@@ -248,5 +300,5 @@ export default function WaitlistStyled() {
         </GlassMasterCard>
       </section>
     </main>
-  )
+  );
 }

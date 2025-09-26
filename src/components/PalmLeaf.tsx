@@ -1,27 +1,27 @@
-import React from 'react';
+import React from "react";
 
 interface PalmLeafProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   opacity?: number;
   animate?: boolean;
 }
 
-export default function PalmLeaf({ 
-  className = '', 
-  size = 'md', 
+export default function PalmLeaf({
+  className = "",
+  size = "md",
   opacity = 0.3,
-  animate = false 
+  animate = false,
 }: PalmLeafProps) {
   const sizeClasses = {
-    sm: 'w-8 h-8',
-    md: 'w-12 h-12', 
-    lg: 'w-16 h-16'
+    sm: "w-8 h-8",
+    md: "w-12 h-12",
+    lg: "w-16 h-16",
   };
 
   return (
-    <div 
-      className={`${sizeClasses[size]} ${animate ? 'animate-pulse' : ''} ${className}`}
+    <div
+      className={`${sizeClasses[size]} ${animate ? "animate-pulse" : ""} ${className}`}
       style={{ opacity }}
     >
       <svg
@@ -37,7 +37,7 @@ export default function PalmLeaf({
             <stop offset="100%" stopColor="#C5E4B5" stopOpacity="0.8" />
           </linearGradient>
         </defs>
-        
+
         {/* Palm leaf shape */}
         <path
           d="M50 10 C20 20, 10 40, 15 60 C20 50, 30 35, 50 30 C70 35, 80 50, 85 60 C90 40, 80 20, 50 10 Z"
@@ -45,7 +45,7 @@ export default function PalmLeaf({
           stroke="rgba(123, 104, 238, 0.3)"
           strokeWidth="0.5"
         />
-        
+
         {/* Leaf segments */}
         <path
           d="M50 15 C35 25, 25 40, 30 55"
@@ -83,7 +83,7 @@ export default function PalmLeaf({
           strokeWidth="0.3"
           fill="none"
         />
-        
+
         {/* Stem */}
         <line
           x1="50"
@@ -100,18 +100,18 @@ export default function PalmLeaf({
 }
 
 // Decorative palm leaf cluster component
-export function PalmLeafCluster({ 
-  className = '',
-  position = 'top-left' 
-}: { 
+export function PalmLeafCluster({
+  className = "",
+  position = "top-left",
+}: {
   className?: string;
-  position?: 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right';
+  position?: "top-left" | "top-right" | "bottom-left" | "bottom-right";
 }) {
   const positionClasses = {
-    'top-left': 'top-4 left-4',
-    'top-right': 'top-4 right-4',
-    'bottom-left': 'bottom-4 left-4',
-    'bottom-right': 'bottom-4 right-4'
+    "top-left": "top-4 left-4",
+    "top-right": "top-4 right-4",
+    "bottom-left": "bottom-4 left-4",
+    "bottom-right": "bottom-4 right-4",
   };
 
   return (

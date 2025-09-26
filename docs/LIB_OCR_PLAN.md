@@ -1,6 +1,7 @@
 # Link-in-Bio + OCR Intake Project
 
 ## Core Idea
+
 - [ ] Public link-in-bio page (like Linktree)
 - [ ] Premium main page (like OnlyFans) with subscriptions/paywall
 - [ ] Back-end OCR intake system (screenshot/URL → extract profile links → auto-create pages)
@@ -9,6 +10,7 @@
 ---
 
 ## Stack
+
 - [ ] Next.js 14 frontend
 - [ ] Fastify API + BullMQ jobs
 - [ ] Supabase (Auth, Postgres, Storage, RLS)
@@ -19,6 +21,7 @@
 ---
 
 ## Database
+
 - [ ] profiles → creator handle, bio, avatar
 - [ ] links → buttons on link page
 - [ ] posts → public/subscriber content
@@ -29,6 +32,7 @@
 ---
 
 ## APIs
+
 - [ ] /p/:handle → free link page
 - [ ] /p/:handle/home → premium page (subscriber feed)
 - [ ] /subscribe/:profileId → Stripe checkout
@@ -37,6 +41,7 @@
 ---
 
 ## Frontend Pages
+
 - [ ] /p/[handle] → link-in-bio
 - [ ] /p/[handle]/home → main feed (subscriber unlock)
 - [ ] /dash/links → CRUD links
@@ -46,6 +51,7 @@
 ---
 
 ## OCR Workflow
+
 - [ ] Save screenshot/URL to Supabase storage
 - [ ] Run OCR → extract text/links
 - [ ] Parse → {name, links[], tags[]}
@@ -55,6 +61,7 @@
 ---
 
 ## MVP Acceptance Criteria
+
 - [ ] Profile with links shows on /p/[handle]
 - [ ] Subscriber-only posts gated by Stripe
 - [ ] OCR job creates profile + links automatically
@@ -64,6 +71,7 @@
 ---
 
 ## Immediate Next Steps
+
 - [ ] Create Supabase tables + RLS
 - [ ] Build /p/[handle] + /p/[handle]/home UI
 - [ ] Implement /ingest/ocr + worker to parse links

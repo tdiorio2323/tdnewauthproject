@@ -6,22 +6,29 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { supabase, SUPABASE_ENABLED } from "@/lib/supabase";
 import { toast } from "sonner";
-import { 
-  BarChart, 
-  Bar, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  LineChart, 
-  Line, 
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  LineChart,
+  Line,
   ResponsiveContainer,
   PieChart,
   Pie,
-  Cell 
+  Cell,
 } from "recharts";
 import {
   Users,
@@ -41,7 +48,7 @@ import {
   Activity,
   Package,
   Eye,
-  LogOut
+  LogOut,
 } from "lucide-react";
 
 const SuperAdminDashboard = () => {
@@ -52,15 +59,15 @@ const SuperAdminDashboard = () => {
     try {
       if (SUPABASE_ENABLED) {
         await supabase.auth.signOut();
-        navigate('/auth');
-        toast.success('Logged out successfully');
+        navigate("/auth");
+        toast.success("Logged out successfully");
       } else {
         console.log("Supabase disabled: Simulating logout.");
-        navigate('/auth');
-        toast.success('Logged out successfully (mock)');
+        navigate("/auth");
+        toast.success("Logged out successfully (mock)");
       }
     } catch (error) {
-      toast.error('Error logging out');
+      toast.error("Error logging out");
     }
   };
 
@@ -69,14 +76,42 @@ const SuperAdminDashboard = () => {
     totalUsers: 2847,
     activeBrands: 156,
     totalRevenue: 458600,
-    monthlyGrowth: 23.5
+    monthlyGrowth: 23.5,
   };
 
   const recentBrands = [
-    { id: 1, name: "Green Valley Cannabis", email: "contact@greenvalley.com", status: "pending", applied: "2024-01-25", revenue: 12500 },
-    { id: 2, name: "High Quality Herbs", email: "info@hqherbs.com", status: "active", applied: "2024-01-20", revenue: 28900 },
-    { id: 3, name: "Cannabis Craft Co", email: "hello@cannabiscraft.com", status: "pending", applied: "2024-01-22", revenue: 0 },
-    { id: 4, name: "Pure Cannabis", email: "support@purecannabis.com", status: "active", applied: "2024-01-18", revenue: 45200 }
+    {
+      id: 1,
+      name: "Green Valley Cannabis",
+      email: "contact@greenvalley.com",
+      status: "pending",
+      applied: "2024-01-25",
+      revenue: 12500,
+    },
+    {
+      id: 2,
+      name: "High Quality Herbs",
+      email: "info@hqherbs.com",
+      status: "active",
+      applied: "2024-01-20",
+      revenue: 28900,
+    },
+    {
+      id: 3,
+      name: "Cannabis Craft Co",
+      email: "hello@cannabiscraft.com",
+      status: "pending",
+      applied: "2024-01-22",
+      revenue: 0,
+    },
+    {
+      id: 4,
+      name: "Pure Cannabis",
+      email: "support@purecannabis.com",
+      status: "active",
+      applied: "2024-01-18",
+      revenue: 45200,
+    },
   ];
 
   const getStatusBadge = (status: string) => {
@@ -84,7 +119,7 @@ const SuperAdminDashboard = () => {
       active: "default",
       pending: "secondary",
       suspended: "destructive",
-      inactive: "outline"
+      inactive: "outline",
     };
     return <Badge variant={variants[status] || "outline"}>{status}</Badge>;
   };
@@ -127,7 +162,9 @@ const SuperAdminDashboard = () => {
                   <Users className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{platformStats.totalUsers.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    {platformStats.totalUsers.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     <span className="text-emerald-500">+12.3%</span> from last month
                   </p>
@@ -153,9 +190,12 @@ const SuperAdminDashboard = () => {
                   <DollarSign className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">${platformStats.totalRevenue.toLocaleString()}</div>
+                  <div className="text-2xl font-bold">
+                    ${platformStats.totalRevenue.toLocaleString()}
+                  </div>
                   <p className="text-xs text-muted-foreground">
-                    <span className="text-emerald-500">+{platformStats.monthlyGrowth}%</span> from last month
+                    <span className="text-emerald-500">+{platformStats.monthlyGrowth}%</span> from
+                    last month
                   </p>
                 </CardContent>
               </Card>
@@ -231,7 +271,9 @@ const SuperAdminDashboard = () => {
             <h2 className="text-2xl font-bold">User Management</h2>
             <Card>
               <CardContent className="p-6">
-                <p className="text-muted-foreground">User management interface with search, filters, and bulk actions.</p>
+                <p className="text-muted-foreground">
+                  User management interface with search, filters, and bulk actions.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>
@@ -240,7 +282,9 @@ const SuperAdminDashboard = () => {
             <h2 className="text-2xl font-bold">Platform Analytics</h2>
             <Card>
               <CardContent className="p-6">
-                <p className="text-muted-foreground">Comprehensive analytics dashboard with charts and insights.</p>
+                <p className="text-muted-foreground">
+                  Comprehensive analytics dashboard with charts and insights.
+                </p>
               </CardContent>
             </Card>
           </TabsContent>

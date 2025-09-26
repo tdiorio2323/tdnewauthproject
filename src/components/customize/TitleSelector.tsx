@@ -29,13 +29,13 @@ export function TitleSelector({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Label className="text-xs text-white/80">Show Title</Label>
-          <Switch 
-            checked={showTitle} 
+          <Switch
+            checked={showTitle}
             onCheckedChange={setShowTitle}
             className="data-[state=checked]:bg-primary"
           />
         </div>
-        
+
         {showTitle && (
           <div>
             <Label className="text-xs text-white/80 mb-2 block">Title</Label>
@@ -50,13 +50,13 @@ export function TitleSelector({
 
         <div className="flex items-center justify-between">
           <Label className="text-xs text-white/80">Show Subtitle</Label>
-          <Switch 
-            checked={showSubtitle} 
+          <Switch
+            checked={showSubtitle}
             onCheckedChange={setShowSubtitle}
             className="data-[state=checked]:bg-primary"
           />
         </div>
-        
+
         {showSubtitle && (
           <div>
             <Label className="text-xs text-white/80 mb-2 block">Subtitle</Label>

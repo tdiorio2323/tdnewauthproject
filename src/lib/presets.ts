@@ -15,4 +15,3 @@ export type Choice = {
 };
 
 export type IntakeLink = { label: string; href: string; icon?: string };
-

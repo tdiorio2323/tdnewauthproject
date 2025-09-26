@@ -1,5 +1,5 @@
-import React from 'react';
-import { frostedOuterStyle, frostedInnerStyle } from '@/lib/frosted';
+import React from "react";
+import { frostedOuterStyle, frostedInnerStyle } from "@/lib/frosted";
 
 export default function GlassMasterCard({ children }: { children: React.ReactNode }) {
   return (
@@ -14,13 +14,13 @@ export default function GlassMasterCard({ children }: { children: React.ReactNod
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 rounded-2xl"
-        style={{ boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18)' }}
+        style={{ boxShadow: "inset 0 1px 0 rgba(255,255,255,.18)" }}
       />
 
       {/* Inner frosted surface */}
       <div
         className="relative rounded-[14px] border p-5 text-white"
-        style={{ ...frostedInnerStyle(), border: '1.5px solid rgba(255,255,255,0.12)' }}
+        style={{ ...frostedInnerStyle(), border: "1.5px solid rgba(255,255,255,0.12)" }}
       >
         {children}
       </div>

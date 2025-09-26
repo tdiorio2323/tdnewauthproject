@@ -10,18 +10,18 @@ const Brand = () => {
     // Check if user is authenticated and has brand role
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (!session) {
-        navigate('/auth');
+        navigate("/auth");
         return;
       }
 
       supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', session.user.id)
+        .from("user_roles")
+        .select("role")
+        .eq("user_id", session.user.id)
         .single()
         .then(({ data }) => {
-          if (!data || data.role !== 'brand') {
-            navigate('/shop');
+          if (!data || data.role !== "brand") {
+            navigate("/shop");
           }
         });
     });

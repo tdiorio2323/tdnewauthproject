@@ -35,7 +35,7 @@ type Theme =
   | "noir";
 type ButtonStyle =
   | "glass"
-  | "chrome" 
+  | "chrome"
   | "neon"
   | "minimal"
   | "vintage"
@@ -60,7 +60,7 @@ const fonts = [
   "Inter",
   "Playfair Display",
   "Space Mono",
-  "Poppins", 
+  "Poppins",
   "Montserrat",
   "Roboto",
   "Lato",
@@ -90,13 +90,13 @@ export default function Customize() {
     { label: "Contact", url: "mailto:hello@example.com", icon: "✉️" },
   ]);
   const [handle, setHandle] = useState<string>("");
-  
+
   // New states for title/subtitle
   const [title, setTitle] = useState<string>("Your Name");
   const [subtitle, setSubtitle] = useState<string>("Your tagline");
   const [showTitle, setShowTitle] = useState<boolean>(true);
   const [showSubtitle, setShowSubtitle] = useState<boolean>(true);
-  
+
   // Features state
   const [features, setFeatures] = useState<FeaturesConfig>({
     tipJar: false,
@@ -150,17 +150,20 @@ export default function Customize() {
     }
   }, [theme]);
 
-
   const getButtonClass = useMemo(() => {
     const base = "w-full text-sm font-medium transition-all duration-200";
-    
+
     // Shape classes
     const shapeClass = () => {
       switch (buttonLayout) {
-        case "square": return "rounded-none";
-        case "circle": return "rounded-full";
-        case "rounded-square": return "rounded-lg";
-        default: return "rounded-md";
+        case "square":
+          return "rounded-none";
+        case "circle":
+          return "rounded-full";
+        case "rounded-square":
+          return "rounded-lg";
+        default:
+          return "rounded-md";
       }
     };
 
@@ -219,27 +222,28 @@ export default function Customize() {
   }
 
   return (
-    <main 
+    <main
       className="min-h-dvh text-white antialiased relative overflow-hidden bg-cover bg-center bg-no-repeat"
       style={{ backgroundImage: `url(${luxuryBg})` }}
     >
       {/* Dark overlay for better text readability */}
       <div className="absolute inset-0 bg-black/60" />
-      
+
       {/* Luxe holographic overlay */}
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(80%_60%_at_50%_0%,rgba(180,140,255,0.15),transparent_60%),radial-gradient(60%_40%_at_80%_100%,rgba(245,207,122,0.15),transparent_60%),radial-gradient(40%_30%_at_20%_80%,rgba(135,230,255,0.12),transparent_50%)]" />
-      
+
       <div className="relative z-10 mx-auto max-w-6xl px-4 py-10">
         <div className="mb-2">
-          <Button variant="ghost" onClick={() => navigate("/")}
-            className="-ml-2 text-white/70 hover:text-white">
+          <Button
+            variant="ghost"
+            onClick={() => navigate("/")}
+            className="-ml-2 text-white/70 hover:text-white"
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back
           </Button>
         </div>
-        <h1 className="text-center text-2xl tracking-[0.35em] text-white">
-          CUSTOMIZE
-        </h1>
+        <h1 className="text-center text-2xl tracking-[0.35em] text-white">CUSTOMIZE</h1>
         <p className="mt-1 text-center text-xs text-white/70">
           Design your experience • Live preview
         </p>
@@ -251,8 +255,8 @@ export default function Customize() {
             <BackgroundSelector theme={theme} setTheme={setTheme} />
 
             {/* 2. Profile Image */}
-            <ProfileImageSelector 
-              icon={icon} 
+            <ProfileImageSelector
+              icon={icon}
               setIcon={setIcon}
               profileShape={profileShape}
               setProfileShape={setProfileShape}
@@ -301,7 +305,8 @@ export default function Customize() {
                       className={cn(
                         "rounded-full backdrop-blur-sm bg-white/20 border border-white/30 px-3 py-1 text-xs text-white transition-all",
                         "hover:bg-white/30",
-                        palettePreset === p.id && "border-primary/60 ring-2 ring-primary/40 bg-white/30"
+                        palettePreset === p.id &&
+                          "border-primary/60 ring-2 ring-primary/40 bg-white/30",
                       )}
                       onClick={() => {
                         setPalettePreset(p.id);
@@ -314,11 +319,11 @@ export default function Customize() {
                 </div>
                 <div>
                   <label className="text-xs text-white/80 mb-2 block">Accent Color</label>
-                  <input 
-                    type="color" 
-                    value={accent} 
-                    onChange={(e) => setAccent(e.target.value)} 
-                    className="h-10 w-full rounded border border-white/30" 
+                  <input
+                    type="color"
+                    value={accent}
+                    onChange={(e) => setAccent(e.target.value)}
+                    className="h-10 w-full rounded border border-white/30"
                   />
                 </div>
               </div>
@@ -352,54 +357,50 @@ export default function Customize() {
               <Card
                 className={cn(
                   "mx-auto w-full max-w-xs rounded-2xl border backdrop-blur-sm bg-white/10 border-white/20 p-6 text-center",
-                  themeClass
+                  themeClass,
                 )}
               >
                 {/* Profile picture with shape */}
-                <div className={cn(
-                  "mx-auto mb-4 flex h-14 w-14 items-center justify-center border bg-white text-xl",
-                  profileShape === "circle" && "rounded-full",
-                  profileShape === "rounded" && "rounded-lg", 
-                  profileShape === "diamond" && "rotate-45 rounded-lg"
-                )}>
-                  <span className={profileShape === "diamond" ? "-rotate-45" : ""}>
-                    {icon}
-                  </span>
+                <div
+                  className={cn(
+                    "mx-auto mb-4 flex h-14 w-14 items-center justify-center border bg-white text-xl",
+                    profileShape === "circle" && "rounded-full",
+                    profileShape === "rounded" && "rounded-lg",
+                    profileShape === "diamond" && "rotate-45 rounded-lg",
+                  )}
+                >
+                  <span className={profileShape === "diamond" ? "-rotate-45" : ""}>{icon}</span>
                 </div>
 
                 {/* Title and subtitle */}
                 {showTitle && (
-                  <div 
-                    className="text-sm font-medium text-white" 
+                  <div
+                    className="text-sm font-medium text-white"
                     style={{ fontFamily: font, fontWeight }}
                   >
                     {title || handle || "Your Name"}
                   </div>
                 )}
-                
-                {showSubtitle && (
-                  <div className="mb-4 text-xs text-white/70">
-                    {subtitle}
-                  </div>
-                )}
+
+                {showSubtitle && <div className="mb-4 text-xs text-white/70">{subtitle}</div>}
 
                 {/* Links */}
                 <div className="space-y-2 mb-4">
-                  {(links.length ? links : [{ label: "Sample Link", url: "#", icon: "🔗" }]).map((l, idx) => (
-                    <div key={idx} className={getButtonClass}>
-                      {l.icon && <span className="mr-2">{l.icon}</span>}
-                      {l.label}
-                    </div>
-                  ))}
+                  {(links.length ? links : [{ label: "Sample Link", url: "#", icon: "🔗" }]).map(
+                    (l, idx) => (
+                      <div key={idx} className={getButtonClass}>
+                        {l.icon && <span className="mr-2">{l.icon}</span>}
+                        {l.label}
+                      </div>
+                    ),
+                  )}
                 </div>
 
                 {/* Features preview */}
                 {features.tipJar && (
-                  <div className={cn(getButtonClass, "mb-2")}>
-                    💰 Tip {features.tipAmount}
-                  </div>
+                  <div className={cn(getButtonClass, "mb-2")}>💰 Tip {features.tipAmount}</div>
                 )}
-                
+
                 {features.monthlySubscription && (
                   <div className={cn(getButtonClass, "mb-4")}>
                     ⭐ {features.subscriptionTitle} - {features.subscriptionPrice}/mo
@@ -424,4 +425,3 @@ export default function Customize() {
     </main>
   );
 }
-

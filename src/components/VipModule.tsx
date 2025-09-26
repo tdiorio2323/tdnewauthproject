@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import PreviewModal from './PreviewModal';
-import { supabase, SUPABASE_ENABLED } from '@/lib/supabase';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import PreviewModal from "./PreviewModal";
+import { supabase, SUPABASE_ENABLED } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { frostedInputStyle, frostedButtonStyle, neonGlowStyle, holographicGradient } from '@/lib/frosted';
+import {
+  frostedInputStyle,
+  frostedButtonStyle,
+  neonGlowStyle,
+  holographicGradient,
+} from "@/lib/frosted";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export default function VipModule() {
   const navigate = useNavigate();
   const [openPreview, setOpenPreview] = useState(false);
-  const [email, setEmail] = useState('');
-  const [vipCode, setVipCode] = useState('');
+  const [email, setEmail] = useState("");
+  const [vipCode, setVipCode] = useState("");
   const { toast } = useToast();
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -28,7 +34,7 @@ export default function VipModule() {
       };
 
       let data = null;
-      let error = null;
+      let error: PostgrestError | null = null;
 
       if (SUPABASE_ENABLED) {
         const result = await supabase
@@ -47,10 +53,9 @@ export default function VipModule() {
       }
 
       // Unique violation (already on the list) — treat as success
-      const isDuplicate = (
-        (error as any)?.code === "23505" ||
-        (error as any)?.message?.toLowerCase?.().includes("duplicate key")
-      );
+      const isDuplicate =
+        (error && error.code === "23505") ||
+        (error && error.message?.toLowerCase?.().includes("duplicate key"));
 
       if (error && !isDuplicate) throw error;
 
@@ -91,7 +96,7 @@ export default function VipModule() {
                        placeholder:text-zinc-500 focus:outline-none focus:border-zinc-600 
                        transition-all duration-300 hover:border-zinc-600/70"
           />
-          
+
           <input
             type="text"
             placeholder="VIP Code (optional)"
@@ -101,7 +106,7 @@ export default function VipModule() {
                        placeholder:text-zinc-500 focus:outline-none focus:border-zinc-600 
                        transition-all duration-300 hover:border-zinc-600/70"
           />
-          
+
           <button
             type="submit"
             disabled={loading || !email.trim()}
@@ -110,7 +115,7 @@ export default function VipModule() {
                        transform hover:scale-[1.02] active:scale-[0.98]
                        disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
           >
-            {loading ? 'Requesting...' : 'Request Access'}
+            {loading ? "Requesting..." : "Request Access"}
           </button>
         </form>
       ) : (
@@ -123,15 +128,21 @@ export default function VipModule() {
       {/* Clean footer */}
       <div className="text-center space-y-3 pt-2">
         <div className="flex items-center justify-center gap-2 text-xs text-zinc-500">
-          <svg viewBox="0 0 24 24" className="h-3 w-3" fill="none" stroke="currentColor" strokeWidth="2">
+          <svg
+            viewBox="0 0 24 24"
+            className="h-3 w-3"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+          >
             <rect x="4" y="11" width="16" height="9" rx="2" />
             <path d="M8 11V8a4 4 0 0 1 8 0v3" />
           </svg>
           Secure & Encrypted
         </div>
-        
+
         <button
-          onClick={() => navigate('/signup')}
+          onClick={() => navigate("/signup")}
           className="text-xs text-zinc-400 hover:text-white underline decoration-zinc-600 
                      underline-offset-2 hover:decoration-zinc-400 transition-colors"
         >

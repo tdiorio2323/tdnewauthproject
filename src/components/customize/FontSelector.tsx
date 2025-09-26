@@ -9,7 +9,7 @@ import { useMemo } from "react";
 const fonts = [
   "Inter",
   "Playfair Display",
-  "Space Mono", 
+  "Space Mono",
   "Poppins",
   "Montserrat",
   "Roboto",
@@ -49,29 +49,26 @@ export function FontSelector({ font, setFont, fontWeight, setFontWeight }: FontS
               className={cn(
                 "flex cursor-pointer items-center justify-between rounded-lg backdrop-blur-sm bg-white border border-white/30 px-3 py-3 text-sm transition-all",
                 "hover:bg-white/90 hover:border-white/40",
-                font === f && "border-primary/60 ring-2 ring-primary/40 bg-white"
+                font === f && "border-primary/60 ring-2 ring-primary/40 bg-white",
               )}
             >
               <div className="flex items-center gap-3">
                 <RadioGroupItem value={f} id={`font-${f}`} className="border-black/30" />
-                <span 
-                  style={{ fontFamily: f, fontWeight }}
-                  className="text-black"
-                >
+                <span style={{ fontFamily: f, fontWeight }} className="text-black">
                   {f} - The quick brown fox
                 </span>
               </div>
             </label>
           ))}
         </RadioGroup>
-        
+
         <div>
           <Label className="text-xs text-white/80 mb-2 block">Font Weight: {fontWeight}</Label>
-          <Slider 
-            value={[fontWeight]} 
-            min={300} 
-            max={800} 
-            step={100} 
+          <Slider
+            value={[fontWeight]}
+            min={300}
+            max={800}
+            step={100}
             onValueChange={(v) => setFontWeight(v[0] || 500)}
             className="w-full"
           />

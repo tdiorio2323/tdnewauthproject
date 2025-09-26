@@ -1,7 +1,9 @@
 # CABANA Pre-Launch Database Schema
 
 ## Overview
+
 This schema supports the tdnewauthproject pre-launch flow:
+
 1. **Waitlist** - Users join waitlist for early access
 2. **Creator Signup** - Creators reserve custom pages with handles
 3. **Dynamic Pages** - Live creator pages accessible via `/[handle]`
@@ -9,6 +11,7 @@ This schema supports the tdnewauthproject pre-launch flow:
 ## Required Tables
 
 ### 1. `waitlist` table
+
 ```sql
 CREATE TABLE waitlist (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -25,6 +28,7 @@ CREATE INDEX idx_waitlist_vip_code ON waitlist(vip_code);
 ```
 
 ### 2. `signup_requests` table
+
 ```sql
 CREATE TABLE signup_requests (
   id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
@@ -49,6 +53,7 @@ CREATE INDEX idx_signup_email ON signup_requests(email);
 ```
 
 ### 3. Required Storage Bucket
+
 ```sql
 -- Create storage bucket for logos/images
 INSERT INTO storage.buckets (id, name, public) VALUES ('intake', 'intake', true);
@@ -61,6 +66,7 @@ CREATE POLICY "Authenticated upload" ON storage.objects FOR INSERT WITH CHECK (b
 ## Required Functions
 
 ### 1. Claim Lookup Functions
+
 ```sql
 -- Function to lookup claim by token
 CREATE OR REPLACE FUNCTION claim_lookup(token TEXT)
@@ -78,9 +84,9 @@ DECLARE
 BEGIN
   -- Hash the provided token
   token_hash := encode(digest(token, 'sha256'), 'hex');
-  
+
   RETURN QUERY
-  SELECT 
+  SELECT
     sr.email,
     sr.handle,
     sr.title,
@@ -107,7 +113,7 @@ RETURNS TABLE(
 ) AS $$
 BEGIN
   RETURN QUERY
-  SELECT 
+  SELECT
     sr.email,
     sr.handle,
     sr.title,
@@ -128,10 +134,10 @@ DECLARE
   token_hash TEXT;
 BEGIN
   token_hash := encode(digest(token, 'sha256'), 'hex');
-  
-  UPDATE signup_requests 
+
+  UPDATE signup_requests
   SET status = 'approved', updated_at = NOW()
-  WHERE claim_token_hash = token_hash 
+  WHERE claim_token_hash = token_hash
     AND status = 'pending';
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -140,9 +146,9 @@ $$ LANGUAGE plpgsql SECURITY DEFINER;
 CREATE OR REPLACE FUNCTION claim_use_by_hash(hash TEXT)
 RETURNS VOID AS $$
 BEGIN
-  UPDATE signup_requests 
+  UPDATE signup_requests
   SET status = 'approved', updated_at = NOW()
-  WHERE claim_token_hash = hash 
+  WHERE claim_token_hash = hash
     AND status = 'pending';
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
@@ -159,7 +165,7 @@ ALTER TABLE signup_requests ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "Anyone can insert to waitlist" ON waitlist FOR INSERT WITH CHECK (true);
 CREATE POLICY "Service role can read waitlist" ON waitlist FOR SELECT USING (auth.role() = 'service_role');
 
--- Signup requests policies  
+-- Signup requests policies
 CREATE POLICY "Anyone can insert signup requests" ON signup_requests FOR INSERT WITH CHECK (true);
 CREATE POLICY "Public can read approved requests" ON signup_requests FOR SELECT USING (status = 'approved');
 CREATE POLICY "Service role full access" ON signup_requests FOR ALL USING (auth.role() = 'service_role');
@@ -183,23 +189,26 @@ VITE_FORM_ENDPOINT=optional_form_endpoint
 ## Admin Operations
 
 To manually approve creators:
+
 ```sql
-UPDATE signup_requests 
-SET status = 'approved' 
+UPDATE signup_requests
+SET status = 'approved'
 WHERE handle = 'creator_handle';
 ```
 
 To view waitlist:
+
 ```sql
-SELECT email, vip_code, created_at 
-FROM waitlist 
+SELECT email, vip_code, created_at
+FROM waitlist
 ORDER BY created_at DESC;
 ```
 
 To view pending creator requests:
+
 ```sql
-SELECT handle, email, title, created_at 
-FROM signup_requests 
+SELECT handle, email, title, created_at
+FROM signup_requests
 WHERE status = 'pending'
 ORDER BY created_at DESC;
 ```

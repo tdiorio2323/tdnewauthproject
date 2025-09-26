@@ -20,11 +20,11 @@ const shapes = [
   { id: "diamond", label: "Diamond" },
 ] as { id: ProfileShape; label: string }[];
 
-export function ProfileImageSelector({ 
-  icon, 
-  setIcon, 
-  profileShape, 
-  setProfileShape 
+export function ProfileImageSelector({
+  icon,
+  setIcon,
+  profileShape,
+  setProfileShape,
 }: ProfileImageSelectorProps) {
   const getShapeClass = (shape: ProfileShape) => {
     switch (shape) {
@@ -52,7 +52,8 @@ export function ProfileImageSelector({
                 onClick={() => setProfileShape(shape.id)}
                 className={cn(
                   "p-2 rounded-lg backdrop-blur-sm bg-white/20 border border-white/30 text-xs text-white transition-all",
-                  profileShape === shape.id && "border-primary/60 ring-2 ring-primary/40 bg-white/30"
+                  profileShape === shape.id &&
+                    "border-primary/60 ring-2 ring-primary/40 bg-white/30",
                 )}
               >
                 {shape.label}
@@ -72,7 +73,7 @@ export function ProfileImageSelector({
                 className={cn(
                   "aspect-square border backdrop-blur-sm bg-white/20 border-white/30 text-xl transition-all",
                   getShapeClass(profileShape),
-                  icon === em && "border-primary/60 ring-2 ring-primary/40 bg-white/30"
+                  icon === em && "border-primary/60 ring-2 ring-primary/40 bg-white/30",
                 )}
               >
                 <span className={profileShape === "diamond" ? "-rotate-45" : ""}>{em}</span>
@@ -84,8 +85,8 @@ export function ProfileImageSelector({
         {/* Upload option */}
         <div>
           <Label className="text-xs text-white/80 mb-2 block">Or Upload Custom Image</Label>
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             className="w-full backdrop-blur-sm bg-white/20 border-white/30 text-white hover:bg-white/30"
           >
             <Upload className="w-4 h-4 mr-2" />
@@ -94,7 +95,8 @@ export function ProfileImageSelector({
         </div>
 
         <p className="text-center text-xs text-white/60">
-          Selected: <span className="font-medium">{icon}</span> • Shape: <span className="font-medium">{profileShape}</span>
+          Selected: <span className="font-medium">{icon}</span> • Shape:{" "}
+          <span className="font-medium">{profileShape}</span>
         </p>
       </div>
     </Section>

@@ -9,27 +9,27 @@ const Checkout = () => {
 
   useEffect(() => {
     // Get cart data from sessionStorage
-    const storedItems = sessionStorage.getItem('cartItems');
-    const storedTotal = sessionStorage.getItem('cartTotal');
-    
+    const storedItems = sessionStorage.getItem("cartItems");
+    const storedTotal = sessionStorage.getItem("cartTotal");
+
     if (storedItems && storedTotal) {
       setCartItems(JSON.parse(storedItems));
       setCartTotal(parseInt(storedTotal));
     } else {
       // No cart data, redirect to shop
-      navigate('/shop');
+      navigate("/shop");
     }
   }, [navigate]);
 
   const handleBack = () => {
-    navigate('/shop');
+    navigate("/shop");
   };
 
   const handleOrderComplete = () => {
     // Clear cart data
-    sessionStorage.removeItem('cartItems');
-    sessionStorage.removeItem('cartTotal');
-    navigate('/shop');
+    sessionStorage.removeItem("cartItems");
+    sessionStorage.removeItem("cartTotal");
+    navigate("/shop");
   };
 
   return (

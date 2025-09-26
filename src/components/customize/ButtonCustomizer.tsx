@@ -43,11 +43,11 @@ const buttonLayouts = [
   { id: "rounded-square", label: "Soft Squares" },
 ] as { id: ButtonLayout; label: string }[];
 
-export function ButtonCustomizer({ 
-  buttonStyle, 
-  setButtonStyle, 
-  buttonLayout, 
-  setButtonLayout 
+export function ButtonCustomizer({
+  buttonStyle,
+  setButtonStyle,
+  buttonLayout,
+  setButtonLayout,
 }: ButtonCustomizerProps) {
   return (
     <div className="grid gap-6 md:grid-cols-2">

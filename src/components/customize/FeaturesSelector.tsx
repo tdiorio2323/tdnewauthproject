@@ -17,10 +17,7 @@ interface FeaturesSelectorProps {
 }
 
 export function FeaturesSelector({ features, setFeatures }: FeaturesSelectorProps) {
-  const updateFeature = <K extends keyof FeaturesConfig>(
-    key: K, 
-    value: FeaturesConfig[K]
-  ) => {
+  const updateFeature = <K extends keyof FeaturesConfig>(key: K, value: FeaturesConfig[K]) => {
     setFeatures({ ...features, [key]: value });
   };
 
@@ -31,7 +28,7 @@ export function FeaturesSelector({ features, setFeatures }: FeaturesSelectorProp
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-sm text-white/90">💰 Tip Jar</Label>
-            <Switch 
+            <Switch
               checked={features.tipJar}
               onCheckedChange={(value) => updateFeature("tipJar", value)}
               className="data-[state=checked]:bg-primary"
@@ -54,7 +51,7 @@ export function FeaturesSelector({ features, setFeatures }: FeaturesSelectorProp
         <div className="space-y-3">
           <div className="flex items-center justify-between">
             <Label className="text-sm text-white/90">⭐ Monthly Subscription</Label>
-            <Switch 
+            <Switch
               checked={features.monthlySubscription}
               onCheckedChange={(value) => updateFeature("monthlySubscription", value)}
               className="data-[state=checked]:bg-primary"

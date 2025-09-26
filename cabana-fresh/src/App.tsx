@@ -38,9 +38,7 @@ export default function App() {
         {/* VIP Access */}
         <div className="mt-6 border border-white/20 rounded-lg p-4 bg-black/30">
           <h2 className="font-semibold text-lg">VIP Access</h2>
-          <p className="text-sm text-gray-300 mb-3">
-            Get early access and your own link page.
-          </p>
+          <p className="text-sm text-gray-300 mb-3">Get early access and your own link page.</p>
           <form className="space-y-3">
             <input
               type="email"

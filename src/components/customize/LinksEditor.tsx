@@ -26,16 +26,17 @@ export function LinksEditor({ links, setLinks }: LinksEditorProps) {
   };
 
   const updateLink = (index: number, field: keyof Link, value: string) => {
-    setLinks(links.map((link, i) => 
-      i === index ? { ...link, [field]: value } : link
-    ));
+    setLinks(links.map((link, i) => (i === index ? { ...link, [field]: value } : link)));
   };
 
   return (
     <Section title="Links & Social Media">
       <div className="space-y-4">
         {links.map((link, index) => (
-          <div key={index} className="space-y-3 p-3 rounded-lg backdrop-blur-sm bg-white/10 border border-white/20">
+          <div
+            key={index}
+            className="space-y-3 p-3 rounded-lg backdrop-blur-sm bg-white/10 border border-white/20"
+          >
             {/* Icon selector */}
             <div>
               <Label className="text-xs text-white/80 mb-2 block">Icon</Label>
@@ -45,8 +46,8 @@ export function LinksEditor({ links, setLinks }: LinksEditorProps) {
                     key={icon}
                     onClick={() => updateLink(index, "icon", icon)}
                     className={`w-8 h-8 rounded border text-sm transition-all ${
-                      link.icon === icon 
-                        ? "border-primary/60 ring-2 ring-primary/40 bg-white/30" 
+                      link.icon === icon
+                        ? "border-primary/60 ring-2 ring-primary/40 bg-white/30"
                         : "border-white/30 bg-white/20 hover:bg-white/30"
                     }`}
                   >
@@ -87,7 +88,7 @@ export function LinksEditor({ links, setLinks }: LinksEditorProps) {
             </div>
           </div>
         ))}
-        
+
         <Button
           variant="outline"
           onClick={addLink}
