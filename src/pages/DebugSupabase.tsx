@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from "@/env";
+import { SUPABASE_ANON_KEY, SUPABASE_URL } from "@/env";
 
 type Check = {
   name: string;

@@ -1,8 +1,8 @@
 import { useMemo, useState } from "react";
 import GlassMasterCard from "@/components/GlassMasterCard";
-import { frostedButtonStyle, frostedInputStyle } from "@/lib/frosted";
-import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
+import { frostedButtonStyle, frostedInputStyle } from "@/lib/frosted";
 
 type LinkRow = { label: string; url: string };
 

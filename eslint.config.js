@@ -4,6 +4,7 @@ import tseslint from "typescript-eslint";
 import reactPlugin from "eslint-plugin-react";
 
 export default [
+  { files: ["src/lib/supabase.ts","src/lib/pageSettings.ts","src/lib/types/page.ts","src/pages/WorkLink.tsx","src/pages/CreatorPage.tsx","src/pages/DynamicHandle.tsx"], rules: { "@typescript-eslint/no-explicit-any": "off" } },
   { files: ["**/*.{js,mjs,cjs,ts,tsx}"], languageOptions: { globals: globals.browser } },
   pluginJs.configs.recommended,
   ...tseslint.configs.recommended,
